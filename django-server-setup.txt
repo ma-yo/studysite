@@ -1,0 +1,207 @@
+#CENTOS7
+
+#ユーザー追加
+useradd redbee
+passwd redbee
+w1x1y0z9
+
+#パッケージ更新
+yum -y update
+
+#SELINUXの停止
+vi /etc/selinux/config
+SELINUX=disabled
+
+
+#APACHEの設定
+yum -y install httpd httpd-devel
+
+[root@localhost ~]# cd /etc/httpd/conf
+[root@localhost conf]# vi httpd.conf
+
+/DocumentRoot
+
+DocumentRoot "/home/redbee/www/html"
+
+<Directory "/home/redbee/www">
+    AllowOverride All
+    # Allow open access:
+    Require all granted
+</Directory>
+
+<Directory "/home/redbee/www/html">
+    #
+    # Possible values for the Options directive are "None", "All",
+    # or any combination of:
+    #   Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews
+    #
+    # Note that "MultiViews" must be named *explicitly* --- "Options All"
+    # doesn't give it to you.
+    #
+    # The Options directive is both complicated and important.  Please see
+    # http://httpd.apache.org/docs/2.4/mod/core.html#options
+    # for more information.
+    #
+    #Options Indexes FollowSymLinks
+    Options -Indexes
+
+    #
+    # AllowOverride controls what directives may be placed in .htaccess files.
+    # It can be "All", "None", or any combination of the keywords:
+    #   Options FileInfo AuthConfig Limit
+    #
+    #AllowOverride None
+    AllowOverride All
+
+#firewallの停止
+systemctl stop firewalld
+systemctl disable firewalld
+systemctl start httpd
+systemctl enable httpd
+
+su - redbee
+
+mkdir -p www/html
+
+#MYSQL設定
+sudo yum localinstall -y http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm 
+sudo yum install -y mysql-community-server
+sudo systemctl start mysqld
+sudo systemctl enable mysqld
+
+sudo cat /var/log/mysqld.log | grep root
+
+mysql -u root -p
+O%0p7_EhiT)a
+
+set global validate_password_policy=LOW;
+set password = password('w1x1y0z9');
+
+#MYSQLユーザー作成
+grant all privileges on *.* to 'redbee'@'localhost' identified by 'w1x1y0z9';
+\q
+mysql -u redbee -p
+w1x1y0z9
+
+#データベース作成
+mysql > create database studydb;
+\q
+
+#MYSQL設定
+[redbee@localhost ~]$ sudo vi /etc/my.cnf
+
+character_set_server=utf8
+skip-character-set-client-handshake
+
+[redbee@localhost ~]$ sudo systemctl restart mysqld
+
+#PYTHON設定
+sudo yum -y install epel-release
+sudo yum -y install https://repo.ius.io/ius-release-el7.rpm
+
+sudo yum -y install python36u
+sudo yum -y install python36u-pip python36u-devel
+
+#仮想環境設定
+[redbee@localhost ~]$ python3.6 -m venv ~/env/python3
+[redbee@localhost ~]$ source ~/env/python3/bin/activate
+(python3) [redbee@localhost ~]$ sudo chmod 775 ~/env/python3
+(python3) [redbee@localhost ~]$ mkdir www/html/web_app
+
+(python3) [redbee@localhost ~]$ pip install --upgrade pip
+(python3) [redbee@localhost ~]$ pip install django
+(python3) [redbee@localhost ~]$ pip install pymysql
+(python3) [redbee@localhost ~]$ pip install bootstrap4
+(python3) [redbee@localhost ~]$ pip install reportlab
+(python3) [redbee@localhost ~]$ pip install django-static-md5url
+(python3) [redbee@localhost ~]$ pip install mod_wsgi
+
+#リポジトリのクローン
+(python3) [redbee@localhost ~]$ cd www/html/web_app
+(python3) [redbee@localhost web_app]$ git clone https://github.com/ma-yo/studysite.git
+Cloning into 'studysite'...
+Username for 'https://github.com': ma-yo
+Password for 'https://ma-yo@github.com':[W1x1y0z9]
+
+#djangoプロジェクトの作成
+#(python3) [redbee@localhost web_app]$ cd studysite/
+#(python3) [redbee@localhost studysite]$ django-admin startproject studysite
+
+#(python3) [redbee@localhost studysite]$ mv studysite/ studysite_bak
+#(python3) [redbee@localhost studysite]$ cd studysite_bak/
+#(python3) [redbee@localhost studysite_bak]$ mv * ../
+#(python3) [redbee@localhost studysite_bak]$ cd ..
+#(python3) [redbee@localhost studysite]$ rm -rf studysite_bak
+
+#gitにpushしておく
+#(python3) [redbee@localhost studysite]$ git add studysite/
+#(python3) [redbee@localhost studysite]$ git add manage.py
+#(python3) [redbee@localhost studysite]$ git status
+#(python3) [redbee@localhost studysite]$ git config --global user.name "ma-yo"
+#(python3) [redbee@localhost studysite]$ git commit -a
+
+(python3) [redbee@localhost html]$ sudo chmod 777 web_app/
+
+#django設定
+(python3) [redbee@localhost studysite]$ cd studysite/
+(python3) [redbee@localhost studysite]$ vi settings.py
+
+import pymysql
+pymysql.install_as_MySQLdb()
+
+ALLOWED_HOSTS = ['*']
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'studydb',
+        'USER': 'redbee',
+        'PASSWORD': 'w1x1y0z9',
+        'HOST'; '',
+        'PORT'; '',
+    }
+}
+
+(python3) [redbee@localhost studysite]$ vi manage.py
+
+#!/usr/bin/env python
+"""Django's command-line utility for administrative tasks."""
+import os
+import sys
+import pymysql
+
+pymysql.install_as_MySQLdb()
+
+(python3) [redbee@localhost studysite]$ python manage.py migrate
+
+[redbee@localhost ~]$ sudo yum install -y python36u-mod_wsgi
+
+cp /home/redbee/env/python3/lib/python3.6/site-packages/mod_wsgi/server/mod_wsgi-py36.cpython-36m-x86_64-linux-gnu.so /etc/httpd/modules
+[redbee@localhost ~]$ sudo vi /etc/httpd/conf.d/django.conf
+
+#django.conf
+LoadModule wsgi_module modules/mod_wsgi-py36.cpython-36m-x86_64-linux-gnu.so
+#wsgi setting
+WSGIScriptAlias / /home/redbee/www/html/web_app/studysite/studysite/wsgi.py
+WSGIPythonPath /home/redbee/www/html/web_app/studysite/
+Alias /static/ /home/redbee/www/html/web_app/studysite/trunc/static/
+#virtualenv setting
+WSGIPythonHome /home/redbee/env/python3
+<Directory /home/redbee/www/html/web_app/studysite/studysite>
+<Files wsgi.py>
+Require all granted
+</Files>
+</Directory>
+
+
+[redbee@localhost conf.modules.d]$ sudo chmod -R g+rx ~redbee
+[redbee@localhost conf.modules.d]$ sudo chgrp -R apache ~redbee
+
+(python3) [redbee@localhost ~]$ vi ~/.bash_profile
+SECRET_KEY=studysite&!p9m18x%^%gk(d6aj_*&t$j6g1r$_#@+-hh$3vkwx%73j7n$g
+
+(python3) [redbee@ik1-447-55946 studysite]$ mkdir -p trunc/static
+(python3) [redbee@ik1-447-55946 studysite]$ sudo chmod -R 777 trunc/
+(python3) [redbee@ik1-447-55946 studysite]$ sudo mkdir -p /var/log/django
+(python3) [redbee@ik1-447-55946 studysite]$ sudo chmod -R 777 /var/log/django
+(python3) [redbee@ik1-447-55946 studysite]$ sudo chown apache:apache /var/log/django
