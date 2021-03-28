@@ -184,13 +184,20 @@ def create_drill_list(request, drill_type, left_input, left_small_input, right_i
             # 余り有無を取得
             mod_select = int(request.POST.get("mod_select"))
 
+            if mod_select == 2:
+                if abs(left_value_dec) < abs(right_value_dec):
+                    continue
+
             answer_dec = 0
             answer_mod_dec = 0
             try:
                 answer_dec = left_value_dec / right_value_dec
                 answer_mod_dec = left_value_dec % right_value_dec
                 if mod_select == 2 and answer_mod_dec != 0:
-                    answer_dec = Decimal(math.floor(answer_dec))
+                    if answer_dec < 0:
+                        answer_dec = Decimal(math.ceil(answer_dec))
+                    else:
+                        answer_dec = Decimal(math.floor(answer_dec))
             except ZeroDivisionError:
                 # 結果が0除算はやり直す
                 continue
