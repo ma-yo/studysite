@@ -20,7 +20,11 @@ from reportlab.platypus import TableStyle
 from reportlab.lib import colors
 from decimal import Decimal, getcontext, Overflow, DivisionByZero, InvalidOperation
 
-context = {'title':'計算ドリル', 'message':''}
+context = {'title':'計算ドリル', 'message':'', 'timestamp':dt.now().strftime('%Y%m%d%H%M%S')}
+
+def init_context():
+    context['message'] = ""
+    context['timestamp'] = dt.now().strftime('%Y%m%d%H%M%S')
 
 # 描画
 def _draw(p):
@@ -101,7 +105,7 @@ def draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, an
         uhen = str(drill_list[num + start][4])
         if drill_list[num + start][4] < 0:
             uhen = "(" + uhen + ")"
-            
+
         uhen_width = pdfmetrics.stringWidth(uhen, font_name, font_size)
         p.drawString(x + add_x1 + sahen_width + 2 + kigo_width + 2, y, uhen)
         p.drawString(x + add_x1 + sahen_width + 2 + kigo_width + 2 + uhen_width + 5, y, "=")
@@ -387,7 +391,7 @@ def create_drill_exec(request):
 # 計算ドリルを作成する
 def create_drill(request):
     logging.debug("start - create_drill")
-    context['message'] = ""
+    init_context()
     logging.debug("method : " + request.method)
     if request.method == 'GET':
         form = forms.DrillTypeForm()
@@ -415,7 +419,7 @@ def create_drill(request):
 
 def index(request):
     logging.debug("start - index")
-    context['message'] = ""
+    init_context()
     if request.method == 'POST':
         form = forms.DrillTypeForm(request.POST)
         c = {'context': context, 'form': form}

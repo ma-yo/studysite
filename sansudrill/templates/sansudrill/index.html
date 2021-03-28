@@ -2,8 +2,8 @@
 {% load i18n static %}
 {% block title %}{{ context.title }}{% endblock title %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'sansudrill/css/base.css' %}">
-<link rel="stylesheet" href="{% static 'sansudrill/css/index.css' %}">
+<link rel="stylesheet" href="{% static 'sansudrill/css/base.css' %}?timestamp={{context.timestamp}}">
+<link rel="stylesheet" href="{% static 'sansudrill/css/index.css' %}?timestamp={{context.timestamp}}">
 {% endblock %}
 {% block page_title %}計算ドリル{% endblock %}
 {% block content %}
@@ -115,5 +115,5 @@
 
 {% endblock content %}
 {% block extra_js %}
-<script src="{% static 'sansudrill/js/index.js' %}"></script>
+<script src="{% static 'sansudrill/js/index.js' %}?timestamp={{context.timestamp}}"></script>
 {% endblock extra_js %}
