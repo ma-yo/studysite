@@ -5,18 +5,69 @@ class DrillTypeForm(forms.Form):
 
     # バリデーションを実行する
     def clean(self):
+        logging.debug("clean")
         cleaned_data = super().clean()
-        logging.debug("clean_left_input")
-        input1 = cleaned_data.get('left_input')
-        input2 = cleaned_data.get('left_small_input')
-        if input1 == 0 and input2 == 0:
+        left_input = cleaned_data.get('left_input')
+        left_small_input = cleaned_data.get('left_small_input')
+        if left_input == 0 and left_small_input == 0:
             raise forms.ValidationError('整数部と少数部のどちらかは0以外でなければいけません。')
 
-        logging.debug("clean_right_input")
-        input1 = self.cleaned_data.get('right_input')
-        input2 = self.cleaned_data.get('right_small_input')
-        if input1 == 0 and input2 == 0:
+        right_input = self.cleaned_data.get('right_input')
+        right_small_input = self.cleaned_data.get('right_small_input')
+        if right_input == 0 and right_small_input == 0:
             raise forms.ValidationError('整数部と少数部のどちらかは0以外でなければいけません。')
+
+        drill_type = cleaned_data.get('drill_type')
+        left_minus_select = cleaned_data.get('left_minus_select')
+        right_minus_select = cleaned_data.get('right_minus_select')
+        answer_minus_select = cleaned_data.get('answer_minus_select')
+
+        logging.debug("drill_type : " + str(drill_type))
+
+        msg_1 = '答えがマイナスにしかならない設定での答えマイナス「無し」はできません。'
+        msg_2 = '答えがマイナスにならない設定での答えマイナス「ﾏｲﾅｽのみ」はできません。'
+        #足し算バリデーション
+        if drill_type == '1':
+
+            if answer_minus_select == '1' and left_minus_select == '3' and right_minus_select == '3':
+                raise forms.ValidationError(msg_1)
+
+            if answer_minus_select == '3' and left_minus_select == '1' and right_minus_select == '1':
+                raise forms.ValidationError(msg_2)
+
+        #引き算バリデーション
+        if drill_type == '2':
+
+            if answer_minus_select == '3' and left_minus_select == '1' and right_minus_select == '3':
+                raise forms.ValidationError(msg_2)
+
+        if drill_type == '3':
+
+            if answer_minus_select == '1' and left_minus_select == '1' and right_minus_select == '3':
+                raise forms.ValidationError(msg_1)
+
+            if answer_minus_select == '1' and left_minus_select == '3' and right_minus_select == '1':
+                raise forms.ValidationError(msg_1)
+
+            if answer_minus_select == '3' and left_minus_select == '1' and right_minus_select == '1':
+                raise forms.ValidationError(msg_2)
+
+            if answer_minus_select == '3' and left_minus_select == '3' and right_minus_select == '3':
+                raise forms.ValidationError(msg_2)
+
+        if drill_type == '4':
+
+            if answer_minus_select == '1' and left_minus_select == '1' and right_minus_select == '3':
+                raise forms.ValidationError(msg_1)
+
+            if answer_minus_select == '1' and left_minus_select == '3' and right_minus_select == '1':
+                raise forms.ValidationError(msg_1)
+
+            if answer_minus_select == '3' and left_minus_select == '1' and right_minus_select == '1':
+                raise forms.ValidationError(msg_2)
+
+            if answer_minus_select == '3' and left_minus_select == '3' and right_minus_select == '3':
+                raise forms.ValidationError(msg_2)
 
         return cleaned_data
 

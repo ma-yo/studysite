@@ -169,7 +169,7 @@ def create_drill_list(request, drill_type, left_input, left_small_input, right_i
             minus_div = random.randint(0,1)
             if minus_div == 1:
                 right_value_dec *= Decimal(-1)
-        if left_minus_flg == 3: # ﾏｲﾅｽ固定
+        if right_minus_flg == 3: # ﾏｲﾅｽ固定
             right_value_dec *= Decimal(-1)
 
         answer_dec = Decimal(0)
@@ -206,6 +206,7 @@ def create_drill_list(request, drill_type, left_input, left_small_input, right_i
             answer_dec = left_value_dec - right_value_dec
         elif drill_type == 3: #掛け算
             answer_dec = left_value_dec * right_value_dec
+            logging.debug(str(left_value_dec) + "*" + str(right_value_dec))
 
         # ﾏｲﾅｽ無し 結果がﾏｲﾅｽの場合やり直す
         if answer_minus_flg == 1:
@@ -424,7 +425,6 @@ def index(request):
         form = forms.DrillTypeForm(request.POST)
         c = {'context': context, 'form': form}
         form.is_valid()
-        logging.debug("valid - error")
     else:
         form = forms.DrillTypeForm()
         c = {'context': context, 'form': form}
