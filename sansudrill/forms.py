@@ -91,7 +91,7 @@ class DrillTypeForm(forms.Form):
     # 左辺整数部分
     left_input = forms.IntegerField(
         label='左辺整数部',
-        widget=forms.NumberInput(attrs={'class':'text-right'}),
+        widget=forms.NumberInput(attrs={'class':'text-right form-control'}),
         min_value=0,
         max_value=10,
         initial=3,
@@ -104,7 +104,7 @@ class DrillTypeForm(forms.Form):
     # 左辺少数部分
     left_small_input  = forms.IntegerField(
         label='左辺少数部',
-        widget=forms.NumberInput(attrs={'class':'text-right'}),
+        widget=forms.NumberInput(attrs={'class':'text-right form-control'}),
         min_value=0,
         max_value=5,
         initial=0,
@@ -117,7 +117,7 @@ class DrillTypeForm(forms.Form):
     # 右辺整数部分
     right_input = forms.IntegerField(
         label='右辺整数部',
-        widget=forms.NumberInput(attrs={'class':'text-right'}),
+        widget=forms.NumberInput(attrs={'class':'text-right form-control'}),
         min_value=0,
         max_value=10,
         initial=3,
@@ -130,7 +130,7 @@ class DrillTypeForm(forms.Form):
     # 右辺少数部分
     right_small_input  = forms.IntegerField(
         label='右辺少数部',
-        widget=forms.NumberInput(attrs={'class':'text-right'}),
+        widget=forms.NumberInput(attrs={'class':'text-right form-control'}),
         min_value=0,
         max_value=5,
         initial=0,
@@ -145,40 +145,40 @@ class DrillTypeForm(forms.Form):
         choices=(('1','無し'),('2','有り')),
         required=False,
         initial='1',
-        widget=forms.Select(attrs={'class':'text-left'}),
+        widget=forms.Select(attrs={'class':'text-left form-control'}),
     )
     # 解答有無
     answer_select = forms.ChoiceField(
         choices=(('1','無し'),('2','有り')),
         required=True,
         initial='2',
-        widget=forms.Select(attrs={'class':'text-left'}),
+        widget=forms.Select(attrs={'class':'text-left form-control'}),
     )
     # 指定桁固定
     keta_fix_select  = forms.ChoiceField(
         choices=(('1','しない'),('2','する')),
         required=True,
         initial='2',
-        widget=forms.Select(attrs={'class':'text-left'}),
+        widget=forms.Select(attrs={'class':'text-left form-control'}),
     )
     # マイナス有無
     left_minus_select  = forms.ChoiceField(
         choices=(('1','無し'),('2','有り'),('3','ﾏｲﾅｽのみ')),
         required=True,
         initial='1',
-        widget=forms.Select(attrs={'class':'text-left'}),
+        widget=forms.Select(attrs={'class':'text-left form-control'}),
     )
     # マイナス有無
     right_minus_select  = forms.ChoiceField(
         choices=(('1','無し'),('2','有り'),('3','ﾏｲﾅｽのみ')),
         required=True,
         initial='1',
-        widget=forms.Select(attrs={'class':'text-left'}),
+        widget=forms.Select(attrs={'class':'text-left form-control'}),
     )
     # 答えマイナス
     answer_minus_select  = forms.ChoiceField(
         choices=(('1','無し'),('2','有り'),('3','ﾏｲﾅｽのみ')),
         required=True,
         initial='1',
-        widget=forms.Select(attrs={'class':'text-left'}),
+        widget=forms.Select(attrs={'class':'text-left form-control'}),
     )

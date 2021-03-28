@@ -27,12 +27,12 @@
         {% endif %}
     </div>
     <!--計算式-->
-    <div class="row form-group m-0 p-0">
-        <div class="col-3 m-0 p-0">
+    <div class="row form-group m-0 p-0 mb-2">
+        <div class="col-3 m-0 p-0 form-inline">
             <label class="label-small">マイナス：</label>
             {{ form.left_minus_select }}
         </div>
-        <div class="col-3 m-0 p-0">
+        <div class="col-3 m-0 p-0 form-inline">
             <label class="label-small">左辺整数部：</label>
             {{ form.left_input }}
             <label>桁</label>
@@ -42,7 +42,7 @@
             </div>
             {% endif %}
         </div>
-        <div class="col-3 m-0 p-0">
+        <div class="col-3 m-0 p-0 form-inline">
             <label class="label-small">左辺少数部：</label>
             {{ form.left_small_input }}
             <label>桁</label>
@@ -53,12 +53,12 @@
             {% endif %}
         </div>
     </div>
-    <div class="row form-group m-0 p-0">
-        <div class="col-3 m-0 p-0">
+    <div class="row form-group m-0 p-0 mb-2">
+        <div class="col-3 m-0 p-0 form-inline">
             <label class="label-small">マイナス：</label>
             {{ form.right_minus_select }}
         </div>
-        <div class="col-3 m-0 p-0">
+        <div class="col-3 m-0 p-0 form-inline">
             <label class="label-small">右辺整数部：</label>
             {{ form.right_input }}
             <label>桁</label>
@@ -68,7 +68,7 @@
             </div>
             {% endif %}
         </div>
-        <div class="col-3 m-0 p-0">
+        <div class="col-3 m-0 p-0 form-inline">
             <label class="label-small">右辺少数部：</label>
             {{ form.right_small_input }}
             <label>桁</label>
@@ -86,25 +86,25 @@
             {% endfor %}
         </div>
     {% endif %}
-    <div class="row form-group m-0 p-0">
-        <div class="col-3 m-0 p-0">
+    <div class="row form-group m-0 p-0 mb-2">
+        <div class="col-3 m-0 p-0 form-inline">
             {% if form.drill_type.value == '4' %}
             <label class="label-small">あまり有無：</label>
             {{ form.mod_select }}
             {% endif %}
         </div>
-        <div class="col-3 m-0 p-0">
+        <div class="col-3 m-0 p-0 form-inline">
             <label class="label-small">指定桁固定：</label>
             {{ form.keta_fix_select }}
         </div>
     </div>
 
-    <div class="row form-group m-0 p-0">
-        <div class="col-3 m-0 p-0">
+    <div class="row form-group m-0 p-0 mb-2">
+        <div class="col-3 m-0 p-0 form-inline">
             <label class="label-small">答えマイナス：</label>
             {{ form.answer_minus_select }}
         </div>
-        <div class="col-3 m-0 p-0">
+        <div class="col-3 m-0 p-0 form-inline">
             <label class="label-small">答え出力：</label>
             {{ form.answer_select }}
         </div>
