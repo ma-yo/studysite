@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Application definition
 
 INSTALLED_APPS = [
+    'django_static_md5url',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,7 +31,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sansudrill.apps.SansudrillConfig',
     'bootstrap4',
-    'django_static_md5url',
 ]
 
 MIDDLEWARE = [
