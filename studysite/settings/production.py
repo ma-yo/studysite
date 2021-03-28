@@ -26,8 +26,6 @@ DATABASES = {
 
 STATIC_ROOT = '/home/redbee/www/html/web_app/studysite/trunc/static'
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-
 # will output to logging file
 logging.basicConfig(
     level = logging.DEBUG,
