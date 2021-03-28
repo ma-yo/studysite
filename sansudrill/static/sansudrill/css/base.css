@@ -1,0 +1,9 @@
+body {
+    font-family: "Meiryo UI", "ヒラギノ角ゴシック", "Arial";
+}
+
+.label-small{
+    display:block;
+    float:left;
+    width:100px;
+}

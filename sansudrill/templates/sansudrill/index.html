@@ -1,0 +1,119 @@
+{% extends "sansudrill/base.html" %}
+{% load i18n static %}
+{% block title %}{{ context.title }}{% endblock title %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'sansudrill/css/base.css' %}">
+<link rel="stylesheet" href="{% static 'sansudrill/css/index.css' %}">
+{% endblock %}
+{% block page_title %}計算ドリル{% endblock %}
+{% block content %}
+
+<!-- 計算ドリルフォーム -->
+<form id="drill-form" class="mt-4" action="/" method="POST" novalidate>
+    <!--csrf対策-->
+    {% csrf_token %}
+    <label class="h4 text-dark">50問テスト 作成する計算式を選択してください</label><br>
+
+    <!--計算式選択-->
+    <div class="form-group">
+        {% for radio in form.drill_type %}
+        <div class="form-check form-check-inline">
+            {{ radio.tag }}
+            <label class="form-check-label">{{ radio.choice_label }}</label>
+        </div>
+        {% endfor %}
+        {% if form.errors.drill_type != '' %}
+        {{ form.errors.drill_type }}
+        {% endif %}
+    </div>
+    <!--計算式-->
+    <div class="row form-group m-0 p-0">
+        <div class="col-3 m-0 p-0">
+            <label class="label-small">マイナス：</label>
+            {{ form.left_minus_select }}
+        </div>
+        <div class="col-3 m-0 p-0">
+            <label class="label-small">左辺整数部：</label>
+            {{ form.left_input }}
+            <label>桁</label>
+            {% if form.errors.left_input %}
+            <div class="text-danger small">
+                {{ form.errors.left_input }}
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-3 m-0 p-0">
+            <label class="label-small">左辺少数部：</label>
+            {{ form.left_small_input }}
+            <label>桁</label>
+            {% if form.errors.left_small_input %}
+            <div class="text-danger small">
+                {{ form.errors.left_small_input }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row form-group m-0 p-0">
+        <div class="col-3 m-0 p-0">
+            <label class="label-small">マイナス：</label>
+            {{ form.right_minus_select }}
+        </div>
+        <div class="col-3 m-0 p-0">
+            <label class="label-small">右辺整数部：</label>
+            {{ form.right_input }}
+            <label>桁</label>
+            {% if form.errors.right_input %}
+            <div class="text-danger small">
+                {{ form.errors.right_input }}
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-3 m-0 p-0">
+            <label class="label-small">右辺少数部：</label>
+            {{ form.right_small_input }}
+            <label>桁</label>
+            {% if form.errors.right_small_input %}
+            <div class="text-danger small">
+                {{ form.errors.right_small_input }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% if form.non_field_errors %}
+        <div class="non-field-errors">
+            {% for err in form.non_field_errors %}
+            <p class="form-error text-danger small">● {{ err }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="row form-group m-0 p-0">
+        <div class="col-3 m-0 p-0">
+            {% if form.drill_type.value == '4' %}
+            <label class="label-small">あまり有無：</label>
+            {{ form.mod_select }}
+            {% endif %}
+        </div>
+        <div class="col-3 m-0 p-0">
+            <label class="label-small">指定桁固定：</label>
+            {{ form.keta_fix_select }}
+        </div>
+    </div>
+
+    <div class="row form-group m-0 p-0">
+        <div class="col-3 m-0 p-0">
+            <label class="label-small">答えマイナス：</label>
+            {{ form.answer_minus_select }}
+        </div>
+        <div class="col-3 m-0 p-0">
+            <label class="label-small">答え出力：</label>
+            {{ form.answer_select }}
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" name="create_drill" id="id_create_drill" data-action="create_drill">作成する</button>
+</form>
+
+{% endblock content %}
+{% block extra_js %}
+<script src="{% static 'sansudrill/js/index.js' %}"></script>
+{% endblock extra_js %}
