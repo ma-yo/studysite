@@ -35,7 +35,7 @@ class DrillTypeForm(forms.Form):
         initial='1',
         choices=CHOICE,
         widget=forms.RadioSelect(attrs={
-            'id': 'drill_type','class': 'form-check-input'}))
+            'id': 'drill_type','class': 'form-check-input', 'data-action':'/'}))
 
     # 左辺整数部分
     left_input = forms.IntegerField(

@@ -19,18 +19,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'j_z=6n3bh8(yghg)+h9e-)ca6k6%51%jtz6zux8(mhy3+#!eiu'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -74,20 +62,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'studysite.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'studydb',
-        'USER': 'redbee',
-        'PASSWORD': 'w1x1y0z9',
-        'HOST': '192.168.0.200',
-        'PORT': '',
-    }
-}
 
 
 # Password validation
@@ -128,18 +104,3 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# For debugging 
-if DEBUG:
-    # will output to your console
-    logging.basicConfig(
-        level = logging.DEBUG,
-        format = '%(asctime)s %(levelname)s %(message)s',
-    )
-else:
-    # will output to logging file
-    logging.basicConfig(
-        level = logging.DEBUG,
-        format = '%(asctime)s %(levelname)s %(message)s',
-        filename = '/var/log/django/server.log',
-        filemode = 'a'
-    )
