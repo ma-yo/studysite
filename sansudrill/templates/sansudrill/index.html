@@ -1,9 +1,9 @@
 {% extends "sansudrill/base.html" %}
-{% load i18n static md5url %}
+{% load static %}
 {% block title %}{{ context.title }}{% endblock title %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% md5url 'sansudrill/css/base.css' %}">
-<link rel="stylesheet" href="{% md5url 'sansudrill/css/index.css' %}">
+<link rel="stylesheet" href="{% static 'sansudrill/css/base.css' %}">
+<link rel="stylesheet" href="{% static 'sansudrill/css/index.css' %}">
 {% endblock %}
 {% block page_title %}計算ドリル{% endblock %}
 {% block content %}
@@ -115,5 +115,5 @@
 
 {% endblock content %}
 {% block extra_js %}
-<script src="{% md5url 'sansudrill/js/index.js' %}"></script>
+<script src="{% static 'sansudrill/js/index.js' %}"></script>
 {% endblock extra_js %}
