@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n md5url  %}
 <!DOCTYPE html>{% get_current_language as LANGUAGE_CODE %}
 <html lang="{{ LANGUAGE_CODE|default:"ja" }}">
 
@@ -6,8 +6,8 @@
   <meta charset="UTF-8">
   <meta name="keywords" content="算数,数学,ドリル,計算,計算問題,計算問題作成,計算ドリル,けいさん,さんすう,もんだいさくせい,問題作成">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="icon" href="{% static 'sansudrill/images/favicon.ico' %}">
-  <link rel="stylesheet" href="{% static 'sansudrill/css/bootstrap.min.css' %}">
+  <link rel="icon" href="{% md5url  'sansudrill/images/favicon.ico' %}">
+  <link rel="stylesheet" href="{% md5url  'sansudrill/css/bootstrap.min.css' %}">
   {% block extra_css %}{% endblock %}
   <title>{% block title %}SANSU DRILL{% endblock %}</title>
 </head>
@@ -27,8 +27,8 @@
     {{ content }}
     {% endblock %}
   </div>
-  <script src="{% static 'sansudrill/js/jquery-3.6.0.min.js' %}"></script>
-  <script src="{% static 'sansudrill/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% md5url  'sansudrill/js/jquery-3.6.0.min.js' %}"></script>
+  <script src="{% md5url  'sansudrill/js/bootstrap.bundle.min.js' %}"></script>
   {% block extra_js %}{% endblock %}
 </body>
 
