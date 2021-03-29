@@ -5,6 +5,7 @@ $(function(){
 
     $('#id_create_drill').on('click', function() {
         $('.non-field-errors').hide();
+        $('#message-area').hide();
         drillform_submit($(this).data('action'));
     });
 
