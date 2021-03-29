@@ -396,7 +396,6 @@ def create_drill_exec(request):
     filename = 'drill_' + dt.now().strftime('%Y%m%d%H%M%S') + '.pdf'  # 出力ファイル名
     title = '算数ドリル'
     font_name = 'HeiseiKakuGo-W5'  # フォント
-    font_name = 'ipa-pgothic-fonts'
     width, height = A4
 
     # PDF出力
