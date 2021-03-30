@@ -540,7 +540,6 @@ def index(request):
     init_context()
     if request.method == 'POST':
         form = forms.DrillTypeForm(request.POST)
-        form['mod_select'].
         c = {'context': context, 'form': form}
         form.is_valid()
     else:
