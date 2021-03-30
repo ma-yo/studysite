@@ -238,7 +238,10 @@ class DrillTypeForm(forms.Form):
         right_input = int(cleaned_data.get('right_input'))
         mod_select = 0
         if drill_type == 4:
-            mod_select = int(cleaned_data.get('mod_select'))
+            try:
+                mod_select = int(cleaned_data.get('mod_select'))
+            except:
+                mod_select = 1
         keta_fix_select = int(cleaned_data.get('keta_fix_select'))
         answer_minus_select = int(cleaned_data.get('answer_minus_select'))
 
@@ -259,61 +262,6 @@ class DrillTypeForm(forms.Form):
             check_list = [left_minus_select,left_input,right_minus_select,right_input,mod_select,keta_fix_select,answer_minus_select]
             if self.d4_validate_list.__contains__(check_list):
                 raise forms.ValidationError(msg)
-
-
-
-        # msg_1 = '答えがマイナスにしかならない設定での答えマイナス「無し」はできません。'
-        # msg_2 = '答えがマイナスにならない設定での答えマイナス「ﾏｲﾅｽのみ」はできません。'
-        # msg_3 = '余り無しの場合は左辺を右辺以上の桁数にしてください。'
-        # msg_4 = '余り有りの場合は左辺を右辺以上の桁数にしてください。'
-        # #足し算バリデーション
-        # if drill_type == '1':
-
-        #     if answer_minus_select == '1' and left_minus_select == '3' and right_minus_select == '3':
-        #         raise forms.ValidationError(msg_1)
-
-        #     if answer_minus_select == '3' and left_minus_select == '1' and right_minus_select == '1':
-        #         raise forms.ValidationError(msg_2)
-
-        # #引き算バリデーション
-        # if drill_type == '2':
-
-        #     if answer_minus_select == '3' and left_minus_select == '1' and right_minus_select == '3':
-        #         raise forms.ValidationError(msg_2)
-
-        # if drill_type == '3':
-
-        #     if answer_minus_select == '1' and left_minus_select == '1' and right_minus_select == '3':
-        #         raise forms.ValidationError(msg_1)
-
-        #     if answer_minus_select == '1' and left_minus_select == '3' and right_minus_select == '1':
-        #         raise forms.ValidationError(msg_1)
-
-        #     if answer_minus_select == '3' and left_minus_select == '1' and right_minus_select == '1':
-        #         raise forms.ValidationError(msg_2)
-
-        #     if answer_minus_select == '3' and left_minus_select == '3' and right_minus_select == '3':
-        #         raise forms.ValidationError(msg_2)
-
-        # if drill_type == '4':
-
-        #     if answer_minus_select == '1' and left_minus_select == '1' and right_minus_select == '3':
-        #         raise forms.ValidationError(msg_1)
-
-        #     if answer_minus_select == '1' and left_minus_select == '3' and right_minus_select == '1':
-        #         raise forms.ValidationError(msg_1)
-
-        #     if answer_minus_select == '3' and left_minus_select == '1' and right_minus_select == '1':
-        #         raise forms.ValidationError(msg_2)
-
-        #     if answer_minus_select == '3' and left_minus_select == '3' and right_minus_select == '3':
-        #         raise forms.ValidationError(msg_2)
-
-        #     if mod_select == '1' and left_input < right_input:
-        #         raise forms.ValidationError(msg_3)
-
-        #     if mod_select == '2' and left_input < right_input:
-        #         raise forms.ValidationError(msg_4)
 
         return cleaned_data
 
