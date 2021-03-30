@@ -205,3 +205,88 @@ SECRET_KEY=studysite&!p9m18x%^%gk(d6aj_*&t$j6g1r$_#@+-hh$3vkwx%73j7n$g
 (python3) [redbee@ik1-447-55946 studysite]$ sudo mkdir -p /var/log/django
 (python3) [redbee@ik1-447-55946 studysite]$ sudo chmod -R 777 /var/log/django
 (python3) [redbee@ik1-447-55946 studysite]$ sudo chown apache:apache /var/log/django
+
+
+#let's encrypt設定
+sudo mv django.conf /etc/httpd/conf.d/wsgi.conf
+
+#NameVirtualHost *:80
+
+#LoadModule wsgi_module modules/mod_wsgi-py36.cpython-36m-x86_64-linux-gnu.so
+WSGIScriptAlias / /home/redbee/www/html/web_app/studysite/studysite/wsgi.py
+WSGIPythonPath /home/redbee/www/html/web_app/studysite
+WSGIPythonHome /home/redbee/env/python3
+
+<VirtualHost *:80>
+  DocumentRoot /home/redbee/www/html/web_app/studysite
+  ServerName www.keisan-drill.com
+  ServerAlias keisan-drill.com
+
+  <Directory /home/redbee/www/html/web_app/studysite>
+    <Files wsgi.py>
+      Require all granted
+    </Files>
+  </Directory>
+</VirtualHost>
+
+#mod_wsgiを使用する時はstaticを別途指定する必要あり
+Alias /static/ /home/redbee/www/html/web_app/studysite/trunc/static/
+<Directory /home/redbee/www/html/web_app/studysite/trunc/static/>
+  Require all granted
+</Directory>
+
+
+sudo vi /etc/httpd/conf/httpd.conf
+
+#DocumentRoot "/home/redbee/www/html"
+#ServerName www.example.com:80
+
+[redbee@localhost studysite]$ cd /home/redbee/www/html/web_app/studysite/
+[redbee@localhost studysite]$ mkdir .well-known
+[redbee@localhost studysite]$ cd .well-known/
+[redbee@localhost .well-known]$ mkdir acme-challenge
+(python3) [redbee@ik1-447-55946 .well-known]$ vi acme-challenge/test.html
+
+(python3) [redbee@ik1-447-55946 studysite]$ sudo vi /etc/httpd/conf.d/ssl.conf
+Alias /.well-known /home/redbee/www/html/web_app/studysite/.well-known
+<Directory /home/redbee/www/html/web_app/studysite/.well-known>
+    Require all granted
+</Directory>
+
+
+[redbee@ik1-447-55946 conf.d]$ sudo certbot certonly --webroot -w /home/redbee/www/html/web_app/studysite/ -d keisan-drill.com --email=m.yoshida.1977@googlemail.com
+
+
+sudo vi /etc/httpd/conf.d/wsgi.conf
+
+#LoadModule wsgi_module modules/mod_wsgi-py36.cpython-36m-x86_64-linux-gnu.so
+WSGIScriptAlias / /home/redbee/www/html/web_app/studysite/studysite/wsgi.py
+WSGIPythonPath /home/redbee/www/html/web_app/studysite
+WSGIPythonHome /home/redbee/env/python3
+<Virtualhost *:443>
+  DocumentRoot /home/redbee/www/html/web_app/studysite/studysite
+  ServerName keisan-drill.com
+  ServerAlias keisan-drill.com
+
+  SSLEngine On
+  SSLCertificateFile /etc/letsencrypt/live/keisan-drill.com/cert.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/keisan-drill.com/privkey.pem
+  SSLCertificateChainFile /etc/letsencrypt/live/keisan-drill.com/chain.pem
+  <Directory /home/redbee/www/html/web_app/studysite/studysite>
+   <Files wsgi.py>
+      Require all granted
+    </Files>
+  </Directory>
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerName keisan-drill.com
+  RewriteEngine on
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</VirtualHost>
+
+Alias /static/ /home/redbee/www/html/web_app/studysite/trunc/static/
+<Directory /home/redbee/www/html/web_app/studysite/trunc/static/>
+  Require all granted
+</Directory>

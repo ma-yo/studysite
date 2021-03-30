@@ -428,10 +428,10 @@ def create_drill_exec(request):
         for col in range(2):
             y = height - 30
             if col == 0:
-                x = 5
+                x = 15
                 start = 0
             else:
-                x = width / 2
+                x = width / 2 + 7
                 start = 25
 
             draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False)
@@ -471,10 +471,10 @@ def create_drill_exec(request):
             for col in range(2):
                 y = height - 30
                 if col == 0:
-                    x = 5
+                    x = 15
                     start = 0
                 else:
-                    x = width / 2
+                    x = width / 2 + 7
                     start = 25
 
                 draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True)
