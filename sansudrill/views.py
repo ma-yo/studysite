@@ -2,6 +2,7 @@ import logging
 import random
 import reportlab
 import math
+import os
 from django.template.context_processors import csrf
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
@@ -10,6 +11,7 @@ from datetime import datetime as dt
 
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.pagesizes import A4
@@ -19,6 +21,7 @@ from reportlab.platypus import Table
 from reportlab.platypus import TableStyle
 from reportlab.lib import colors
 from decimal import Decimal, getcontext, Overflow, DivisionByZero, InvalidOperation
+from django.conf import settings
 
 #コンテキスト
 context = {'title':'計算ドリル', 'message_type':'alert-info', 'message':'', 'timestamp':dt.now().strftime('%Y%m%d%H%M%S')}
@@ -395,7 +398,8 @@ def create_drill_exec(request):
 
     filename = 'drill_' + dt.now().strftime('%Y%m%d%H%M%S') + '.pdf'  # 出力ファイル名
     title = '算数ドリル'
-    font_name = 'HeiseiKakuGo-W5'  # フォント
+    font_name = 'ipa-gothic-fonts'  # フォント
+
     width, height = A4
 
     # PDF出力
@@ -408,8 +412,8 @@ def create_drill_exec(request):
     # pdfを描く場所を作成：位置を決める原点は左上にする(bottomup)
     # デフォルトの原点は左下
     p = canvas.Canvas(response, pagesize=size, bottomup=True)
-    pdfmetrics.registerFont(UnicodeCIDFont(font_name))
-
+    #pdfmetrics.registerFont(UnicodeCIDFont(font_name))
+    pdfmetrics.registerFont(TTFont(font_name, os.path.dirname(settings.BASE_DIR) + '/fonts/ipaexg.ttf'))
     font_size = 12
     p.setFont(font_name, font_size)  # フォントを設定
     # pdfのタイトルを設定
