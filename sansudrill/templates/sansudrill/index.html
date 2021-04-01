@@ -22,13 +22,14 @@
 <form id="drill-form" class="mt-4" action="/" method="POST" novalidate>
     <!--csrf対策-->
     {% csrf_token %}
-    <label class="h4 text-dark">50問テスト 作成する計算式を選択してください</label><br>
+    <label class="h1 text-dark">算数問題作成サイト (50問)</label><br>
     <input type="hidden" name="output-type" id="output-type" value="pdf" />
     <input type="hidden" name="enc-type" id="enc-type" value="utf-8" />
     <!--計算式選択-->
     <div class="row mt-3">
-        <div class="col-3 h4 mt-1 font-weight-bold text-right">計算式選択:</div>
-        <div class="col-9 form-group h4 text-left">
+        <div class="col-1"></div>
+        <div class="col-3 h4 mt-1 font-weight-bold text-right">計算タイプ:</div>
+        <div class="col-8 form-group h4 text-left">
             {% for radio in form.drill_type %}
             <div class="form-check form-check-inline">
                 {{ radio.tag }}
@@ -45,18 +46,16 @@
 
     <!--計算式-->
     <div class="row mt-3">
-        <div class="col-3 h4 my-top mt-1 font-weight-bold text-right">桁数設定:</div>
-
-        <div class="col-9 text-left">
+        <div class="col-1"></div>
+        <div class="col-3 h4 my-top mt-1 font-weight-bold text-right">ケタ数:</div>
+        <div class="col-8 text-left">
             <div class="row form-group m-0 p-0 mb-2">
-                <div class="col-3 m-0 p-0 form-inline">
+                <div class="col-12 m-0 p-0 form-inline">
                     <div class="w-100px text-right">マイナス：</div>
                     {{ form.left_minus_select }}
-                </div>
-                <div class="col-9 m-0 p-0 form-inline text-left">
-                    <div class="w-150px text-right">左辺整数(0-10)：</div>
+                    <div class="w-100px text-right ml-4">左辺(0-10)：</div>
                     {{ form.left_input }}
-                    <label>桁</label>
+                    <label>ケタ</label>
                     {% if form.errors.left_input %}
                     <div class="text-danger small">
                         {{ form.errors.left_input }}
@@ -65,14 +64,12 @@
                 </div>
             </div>
             <div class="row form-group m-0 p-0 mb-2">
-                <div class="col-3 m-0 p-0 form-inline">
+                <div class="col-12 m-0 p-0 form-inline">
                     <div class="w-100px text-right">マイナス：</div>
                     {{ form.right_minus_select }}
-                </div>
-                <div class="col-9 m-0 p-0 form-inline text-left">
-                    <div class="w-150px text-right">右辺整数(0-10)：</div>
+                    <div class="w-100px text-right ml-4">右辺(0-10)：</div>
                     {{ form.right_input }}
-                    <label>桁</label>
+                    <label>ケタ</label>
                     {% if form.errors.right_input %}
                     <div class="text-danger small">
                         {{ form.errors.right_input }}
@@ -84,38 +81,38 @@
     </div>
 
     <div class="row mt-3">
+        <div class="col-1"></div>
         <div class="col-3 h4 my-top mt-1 font-weight-bold text-right">オプション設定:</div>
-            <div class="col-9 text-left">
+        <div class="col-8 text-left">
             <div class="row form-group m-0 p-0 mb-2">
-                <div class="col-3 m-0 p-0 form-inline">
+                <div class="col-12 m-0 p-0 form-inline">
                     {% if form.drill_type.value == '4' %}
                     <div class="w-100px text-right">あまり有無：</div>
                     {{ form.mod_select }}
-                    {% endif %}
-                </div>
-                <div class="col-3 m-0 p-0 form-inline">
-                    <div class="w-150px text-right">桁固定：</div>
+                    <div class="w-100px text-right ml-4">桁固定：</div>
                     {{ form.keta_fix_select }}
+                    {% else %}
+                    <div class="w-100px text-right">桁固定：</div>
+                    {{ form.keta_fix_select }}
+                    {% endif %}
                 </div>
             </div>
 
             <div class="row form-group m-0 p-0 mb-2">
-                <div class="col-3 m-0 p-0 form-inline">
+                <div class="col-12 m-0 p-0 form-inline">
                     <div class="w-100px text-right">答えマイナス：</div>
                     {{ form.answer_minus_select }}
-                </div>
-                <div class="col-3 m-0 p-0 form-inline">
-                    <div class="w-150px text-right">答え出力：</div>
+                    <div class="w-100px text-right ml-4">答え出力：</div>
                     {{ form.answer_select }}
                 </div>
             </div>
-
         </div>
     </div>
 
     <div class="row mt-3">
+        <div class="col-1"></div>
         <div class="col-3 h4 my-top mt-1 font-weight-bold text-right">出力指定:</div>
-        <div class="col-9 text-left">
+        <div class="col-8 text-left">
             <button type="button" class="btn btn-primary w-150px" name="create_drill_pdf" id="id_create_drill_pdf" data-content="pdf" data-action="create_drill">PDF出力</button>
             <button type="button" class="btn btn-primary w-200px" name="create_drill_csv_utf8" id="id_create_drill_csv_utf8" data-content="csv" data-enc="utf-8" data-action="create_drill">CSV出力(UTF-8)</button>
             <button type="button" class="btn btn-primary w-150px" name="create_drill_csv_sjis" id="id_create_drill_csv_sjis" data-content="csv" data-enc="sjis" data-action="create_drill">CSV出力(SJIS)</button>

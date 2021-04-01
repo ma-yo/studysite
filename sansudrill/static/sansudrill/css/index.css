@@ -1,9 +1,9 @@
-input#id_left_input, input#id_right_input, input#id_left_small_input, input#id_right_small_input  {
-    width: 110px;
+input#id_left_input, input#id_right_input  {
+    width: 130px;
 }
 
 select#id_mod_input, select#id_left_minus_select, select#id_right_minus_select
 ,select#id_keta_fix_select, select#id_answer_select, select#id_mod_select
 ,select#id_answer_minus_select {
-    width: 110px;
+    width: 130px;
 }

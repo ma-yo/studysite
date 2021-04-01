@@ -315,9 +315,9 @@ class DrillTypeForm(forms.Form):
         initial='1',
         widget=forms.Select(attrs={'class':'text-left form-control'}),
     )
-    # 解答有無
+    # 答え出力
     answer_select = forms.ChoiceField(
-        choices=(('1','無し'),('2','有り')),
+        choices=(('1','しない'),('2','する')),
         required=True,
         initial='2',
         widget=forms.Select(attrs={'class':'text-left form-control'}),
@@ -331,21 +331,21 @@ class DrillTypeForm(forms.Form):
     )
     # マイナス有無
     left_minus_select  = forms.ChoiceField(
-        choices=(('1','無し'),('2','有り'),('3','ﾏｲﾅｽのみ')),
+        choices=(('1','無し'),('2','有り'),('3','マイナスのみ')),
         required=True,
         initial='1',
         widget=forms.Select(attrs={'class':'text-left form-control'}),
     )
     # マイナス有無
     right_minus_select  = forms.ChoiceField(
-        choices=(('1','無し'),('2','有り'),('3','ﾏｲﾅｽのみ')),
+        choices=(('1','無し'),('2','有り'),('3','マイナスのみ')),
         required=True,
         initial='1',
         widget=forms.Select(attrs={'class':'text-left form-control'}),
     )
     # 答えマイナス
     answer_minus_select  = forms.ChoiceField(
-        choices=(('1','無し'),('2','有り'),('3','ﾏｲﾅｽのみ')),
+        choices=(('1','無し'),('2','有り'),('3','マイナスのみ')),
         required=True,
         initial='1',
         widget=forms.Select(attrs={'class':'text-left form-control'}),
