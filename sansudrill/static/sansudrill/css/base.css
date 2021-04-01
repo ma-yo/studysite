@@ -1,9 +1,22 @@
 body {
     font-family: "Meiryo UI", "ヒラギノ角ゴシック", "Arial";
+    background-color:rgb(240,240,240);
+}
+.w-50px{
+    width:50px;
 }
 .w-100px{
     width:100px;
 }
 .w-150px{
     width:150px;
+}
+.w-200px{
+    width:200px;
+}
+.w-250px{
+    width:250px;
+}
+.w-300px{
+    width:300px;
 }

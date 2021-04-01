@@ -228,10 +228,10 @@ class DrillTypeForm(forms.Form):
     # バリデーションを実行する
     def clean(self):
         logging.debug("clean")
+        if len(self.errors) > 0: return
         cleaned_data = super().clean()
 
         drill_type = int(cleaned_data.get('drill_type'))
-
         left_minus_select = int(cleaned_data.get('left_minus_select'))
         left_input = int(cleaned_data.get('left_input'))
         right_minus_select = int(cleaned_data.get('right_minus_select'))

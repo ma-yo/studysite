@@ -7,7 +7,3 @@ select#id_mod_input, select#id_left_minus_select, select#id_right_minus_select
 ,select#id_answer_minus_select {
     width: 110px;
 }
-
-button#id_create_drill{
-    width:100%;
-}
