@@ -3,6 +3,8 @@ import random
 import reportlab
 import math
 import os
+import csv
+
 from django.template.context_processors import csrf
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
@@ -100,9 +102,9 @@ def draw_title(p, font_name, width, height, drill_name, answer_dec):
     p.drawString(x, y, inner_title)
 
 # 計算問題をPDFに描画する
-def draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, answer_dec):
+def draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, answer_output):
     for num in range(25):
-        y -= 31
+        y -= 30.5
         p.drawString(x, y, str(drill_list[num + start][0]) + ")")
 
         kigo = ""
@@ -132,7 +134,7 @@ def draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, an
 
         equals_width = pdfmetrics.stringWidth("=", font_name, font_size)
 
-        if answer_dec:
+        if answer_output:
             if drill_type == 4 and drill_list[num + start][2] == 3 and str(drill_list[num + start][5]).__contains__("."):
                 ans_num = drill_list[num + start][5].quantize(Decimal("0.00001"))
                 ans = str(ans_num)
@@ -328,6 +330,8 @@ def get_drill_name(drill_type):
 # 計算ドリル作成処理
 def create_drill_exec(request):
 
+    output_type = request.POST.get("output-type")
+    enc_type = request.POST.get("enc-type")
     drill_type = int(request.POST.get("drill_type"))
     left_input = int(request.POST.get("left_input"))
     right_input = int(request.POST.get("right_input"))
@@ -340,7 +344,6 @@ def create_drill_exec(request):
     mod_select = 0
     if drill_type == 4:
         mod_select = int(request.POST.get("mod_select"))
-    drill_name = get_drill_name(drill_type)
     # Decimalを初期化する
     getcontext().Emin = -999999999999999
     getcontext().Emax = 999999999999999
@@ -396,10 +399,60 @@ def create_drill_exec(request):
                 'sansudrill/index.html',
                 c)
 
+    logging.debug("output_type")
+    logging.debug(output_type)
+    if output_type == "pdf":
+        return exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list)
+
+    if output_type == "csv":
+        return exec_csv_output(drill_type, left_input, right_input, answer_select, drill_list, enc_type)
+
+def exec_csv_output(drill_type, left_input, right_input, answer_select, drill_list, enc_type):
+    filename = 'drill_' + dt.now().strftime('%Y%m%d%H%M%S') + '.csv'  # 出力ファイル名
+
+    if enc_type == "sjis":
+        response = HttpResponse(content_type='text/csv; charset=Shift-JIS')
+    else:
+        response = HttpResponse(content_type='text/csv')
+        
+    response['Content-Disposition'] = 'attachment; filename=' + filename
+    
+    kigo = ""
+    if drill_type == 1:
+        kigo = "+"
+    elif drill_type == 2:
+        kigo = "-"
+    elif drill_type == 3:
+        kigo = "×"
+    elif drill_type == 4:
+        kigo = "÷"
+
+    writer = csv.writer(response)
+    for drill in drill_list:
+
+        ans = ""
+        amari = ""
+        if answer_select == 2:
+            if drill_type == 4 and drill[2] == 3 and str(drill[5]).__contains__("."):
+                ans_num = drill[5].quantize(Decimal("0.00001"))
+                ans = str(ans_num)
+            else:
+                ans_num = drill[5]
+                ans = str(ans_num)
+
+            if drill[2] == 2 and drill[6] != 0:
+                amari = drill[6]
+        writer.writerow([drill[3], kigo , drill[4], "=", ans, amari ])
+
+    return response
+
+def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list):
+
+    drill_name = get_drill_name(drill_type)
     filename = 'drill_' + dt.now().strftime('%Y%m%d%H%M%S') + '.pdf'  # 出力ファイル名
     title = '算数ドリル'
     font_name = 'ipa-gothic-fonts'  # フォント
-
+    footer = "keisan-drill.com"
     width, height = A4
 
     # PDF出力
@@ -418,6 +471,8 @@ def create_drill_exec(request):
     p.setFont(font_name, font_size)  # フォントを設定
     # pdfのタイトルを設定
     p.setTitle(title)
+
+    footer_width = pdfmetrics.stringWidth(footer, font_name, font_size)
 
     # 桁数合計を取得
     input_sum = left_input + right_input
@@ -440,6 +495,8 @@ def create_drill_exec(request):
 
             draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False)
 
+        p.drawString((width - footer_width) / 2 , 15, footer)
+
         p.showPage()
     else:
         for col in range(2):
@@ -459,6 +516,8 @@ def create_drill_exec(request):
                 start = 25
 
             draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False)
+
+            p.drawString((width - footer_width) / 2 , 15, footer)
 
             p.showPage()
 
@@ -483,6 +542,8 @@ def create_drill_exec(request):
 
                 draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True)
 
+            p.drawString((width - footer_width) / 2 , 15, footer)
+
             p.showPage()
         else:
             for col in range(2):
@@ -502,6 +563,8 @@ def create_drill_exec(request):
                     start = 25
 
                 draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True)
+
+                p.drawString((width - footer_width) / 2 , 15, footer)
 
                 p.showPage()
 
@@ -528,8 +591,8 @@ def create_drill(request):
 
         if form.is_valid():
             logging.debug("goto - drill.html")
-            response = create_drill_exec(request)
-            return response
+
+            return create_drill_exec(request)
 
         else:
             logging.debug("goto - index.html")
