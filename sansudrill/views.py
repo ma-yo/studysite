@@ -4,11 +4,16 @@ import reportlab
 import math
 import os
 import csv
+import xlsxwriter
+
+from io import BytesIO
 
 from django.template.context_processors import csrf
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
+from django.conf import settings
 from . import forms
+
 from datetime import datetime as dt
 
 from reportlab.pdfgen import canvas
@@ -22,8 +27,9 @@ from reportlab.lib.units import mm
 from reportlab.platypus import Table
 from reportlab.platypus import TableStyle
 from reportlab.lib import colors
+
 from decimal import Decimal, getcontext, Overflow, DivisionByZero, InvalidOperation
-from django.conf import settings
+
 
 #コンテキスト
 context = {'title':'計算ドリル', 'message_type':'alert-info', 'message':'', 'timestamp':dt.now().strftime('%Y%m%d%H%M%S')}
@@ -407,6 +413,57 @@ def create_drill_exec(request):
     if output_type == "csv":
         return exec_csv_output(drill_type, left_input, right_input, answer_select, drill_list, enc_type)
 
+    if output_type == "xls":
+        return exec_xls_output(drill_type, left_input, right_input, answer_select, drill_list)
+
+def exec_xls_output(drill_type, left_input, right_input, answer_select, drill_list):
+
+    filename = 'drill_' + dt.now().strftime('%Y%m%d%H%M%S') + '.xlsx'  # 出力ファイル名
+    output = BytesIO()
+    wb = xlsxwriter.Workbook(output)
+    ws = wb.add_worksheet('Sheet1')
+    format = wb.add_format({'align': 'center'})
+    kigo = ""
+    if drill_type == 1:
+        kigo = "＋"
+    elif drill_type == 2:
+        kigo = "－"
+    elif drill_type == 3:
+        kigo = "×"
+    elif drill_type == 4:
+        kigo = "÷"
+
+    row = 0
+    for drill in drill_list:
+        ans = 0
+        amari = 0
+        if answer_select == 2:
+            if drill_type == 4 and drill[2] == 3 and str(drill[5]).__contains__("."):
+                ans_num = drill[5].quantize(Decimal("0.00001"))
+                ans = str(ans_num)
+            else:
+                ans_num = drill[5]
+                ans = str(ans_num)
+
+            if drill[2] == 2 and drill[6] != 0:
+                amari = drill[6]
+        ws.write(row, 0, drill[3], format)
+        ws.write(row, 1, kigo, format)
+        ws.write(row, 2, drill[4], format)
+        ws.write(row, 3, "＝", format)
+        ws.write(row, 4, ans, format)
+        if amari != 0:
+            ws.write(row, 5, amari, format)
+        row+=1
+
+    wb.close()
+    output.seek(0)
+
+    response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response['Content-Disposition'] = "attachment; filename=" + filename
+    # 生成したHttpResponseをreturnする
+    return response
+
 def exec_csv_output(drill_type, left_input, right_input, answer_select, drill_list, enc_type):
     filename = 'drill_' + dt.now().strftime('%Y%m%d%H%M%S') + '.csv'  # 出力ファイル名
 
@@ -414,9 +471,9 @@ def exec_csv_output(drill_type, left_input, right_input, answer_select, drill_li
         response = HttpResponse(content_type='text/csv; charset=Shift-JIS')
     else:
         response = HttpResponse(content_type='text/csv')
-        
+
     response['Content-Disposition'] = 'attachment; filename=' + filename
-    
+
     kigo = ""
     if drill_type == 1:
         kigo = "+"
