@@ -461,7 +461,6 @@ def exec_xls_output(drill_type, left_input, right_input, answer_select, drill_li
 
     response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     response['Content-Disposition'] = "attachment; filename=" + filename
-    # 生成したHttpResponseをreturnする
     return response
 
 def exec_csv_output(drill_type, left_input, right_input, answer_select, drill_list, enc_type):
