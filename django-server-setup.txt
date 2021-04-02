@@ -115,6 +115,7 @@ sudo yum -y install python36u-pip python36u-devel
 (python3) [redbee@localhost ~]$ pip install reportlab
 (python3) [redbee@localhost ~]$ pip install django-static-md5url
 (python3) [redbee@localhost ~]$ pip install mod_wsgi
+(python3) [redbee@localhost ~]$ pip install xlsxwriter
 
 #リポジトリのクローン
 (python3) [redbee@localhost ~]$ cd www/html/web_app
