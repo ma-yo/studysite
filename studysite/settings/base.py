@@ -16,6 +16,8 @@ pymysql.install_as_MySQLdb()
 
 from pathlib import Path
 
+SILENCED_SYSTEM_CHECKS = ['mysql.W003']
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -110,6 +112,3 @@ MEIDA_URL = '/media/'
 
 FONTS_ROOT = os.path.join(BASE_DIR, 'fonts')
 FONTS_URL = '/fonts/'
-
-logging.debug("***************************************************")
-logging.debug(FONTS_ROOT)
