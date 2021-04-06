@@ -1,4 +1,5 @@
 from .base import *
+import datetime
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -26,6 +27,6 @@ STATIC_ROOT = '/home/redbee/www/html/web_app/studysite/trunc/static'
 logging.basicConfig(
     level = logging.DEBUG,
     format = '%(asctime)s %(levelname)s %(message)s',
-    filename = '/var/log/django/server.log',
+    filename = '/var/log/django/' + datetime.datetime.now().strftime('%Y%m%d') + '-server.log',
     filemode = 'a'
 )

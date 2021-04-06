@@ -1,8 +1,9 @@
-from django.db import models
 import hashlib
+from django.db import models
 
 # Create your models here.
 
+# NGパターン保持テーブル
 class NgPattern(models.Model):
     hash_key = models.CharField(max_length=256, primary_key=True)
     drill_type = models.CharField(max_length=3)
@@ -15,6 +16,7 @@ class NgPattern(models.Model):
     answer_minus_flg = models.CharField(max_length=3)
     mod_select = models.CharField(max_length=3)
 
+    # SHA256を用いてハッシュ値を生成する
     def get_hash(self):
         val = self.drill_type + self.left_input + self.right_input + self.answer_select \
             + self.keta_fix_flg + self.left_minus_flg + self.right_minus_flg \

@@ -5,4 +5,8 @@
             "htm", "html", "django-html"
         ]
       },
+    "python.linting.pylintArgs": [
+        "--disable=django-not-configured",
+        "--django-settings-module=studysite.settings",
+    ]
 }

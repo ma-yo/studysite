@@ -38,6 +38,7 @@ MAX_LOOP_COUNT = 100000
 # 問題作成数
 MAKE_COUNT = 50
 
+# コンテキストを初期化する
 def init_context():
     context['message'] = ""
     context['timestamp'] = dt.now().strftime('%Y%m%d%H%M%S')
@@ -63,42 +64,34 @@ def prime_factorize(n):
     return arr
 
 # ランダムな整数を取得する
-def create_randint(value):
-    result = 0
+def create_randint(value, keta_fix):
     number_max = "0"
     num = 0
-    while num != value:
-        num+=1
-        number_max += "9"
 
-    result = random.randint(0, int(number_max))
-    return str(result)
+    if keta_fix == False:
+        while num != value:
+            num+=1
+            number_max += "9"
 
-# ランダムな整数を取得する
-def create_randint2(value, is_shosu):
-    result = ""
-    if value == 0:
-        return 0
-
-    for num in range(value):
-        if is_shosu:
-            if num == value - 1:
-                result += str(random.randint(1, 9))
-            else:
-                result += str(random.randint(0, 9))
-        else:
+        return str(random.randint(0, int(number_max)))
+    else:
+        if value == 0:
+            return 0
+        
+        result = ""
+        for num in range(value):
             if num == 0:
                 result += str(random.randint(1, 9))
             else:
                 result += str(random.randint(0, 9))
 
-    return str(result)
+        return str(result)
 
 # ドリルタイトルを描画する
-def draw_title(p, font_name, width, height, drill_name, answer_dec):
+def draw_title(p, font_name, width, height, drill_name, write_answer):
 
     inner_title = '算数ドリル('+drill_name+')'
-    if answer_dec:
+    if write_answer:
         inner_title += "(答え)"
     font_size = 18
     str_width = pdfmetrics.stringWidth(inner_title, font_name, font_size)
@@ -185,18 +178,18 @@ def create_drill_list(request, drill_type, left_input, right_input
 
     # 作成した計算式を格納
     drill_list = []
-    cnt = 0
+    loop_cnt = 0
     while True:
-        cnt+=1
-        if cnt > MAX_LOOP_COUNT:
+        loop_cnt+=1
+        if loop_cnt > MAX_LOOP_COUNT:
             return []
         # 桁固定の場合
         if keta_fix_flg == 2:
-            left_number_str = create_randint2(left_input, False)
-            right_number_str = create_randint2(right_input, False)
+            left_number_str = create_randint(left_input, True)
+            right_number_str = create_randint(right_input, True)
         else:
-            left_number_str = create_randint(left_input)
-            right_number_str = create_randint(right_input)
+            left_number_str = create_randint(left_input, False)
+            right_number_str = create_randint(right_input, False)
 
         left_value_dec = Decimal(left_number_str)
 
@@ -314,10 +307,10 @@ def create_drill_list(request, drill_type, left_input, right_input
             break
 
     # 問題番号をつける
-    cnt = 1
+    drill_no = 1
     for siki in drill_list:
-        siki[0] = cnt
-        cnt += 1
+        siki[0] = drill_no
+        drill_no += 1
 
     return drill_list
 
@@ -332,7 +325,6 @@ def get_drill_name(drill_type):
         drill_name = "引き算"
     elif drill_type == 3: #掛け算
         drill_name = "かけ算"
-
     return drill_name
 
 # NgPatternモデルを新規で取得する
@@ -382,6 +374,7 @@ def exists_ng_pattern(drill_type, left_input, right_input, answer_select
 # 計算ドリル作成処理
 def create_drill_exec(request):
 
+    #POSTパラメーターを取得する
     output_type = request.POST.get("output-type")
     enc_type = request.POST.get("enc-type")
     drill_type = int(request.POST.get("drill_type"))
@@ -494,8 +487,6 @@ def create_drill_exec(request):
                 'sansudrill/index.html',
                 c)
 
-    logging.debug("output_type")
-    logging.debug(output_type)
     if output_type == "pdf":
         return exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list)
 
@@ -505,6 +496,7 @@ def create_drill_exec(request):
     if output_type == "xls":
         return exec_xls_output(drill_type, left_input, right_input, answer_select, drill_list)
 
+# excelを出力
 def exec_xls_output(drill_type, left_input, right_input, answer_select, drill_list):
 
     filename = 'drill_' + dt.now().strftime('%Y%m%d%H%M%S') + '.xlsx'  # 出力ファイル名
@@ -552,6 +544,7 @@ def exec_xls_output(drill_type, left_input, right_input, answer_select, drill_li
     response['Content-Disposition'] = "attachment; filename=" + filename
     return response
 
+# csvを出力
 def exec_csv_output(drill_type, left_input, right_input, answer_select, drill_list, enc_type):
     filename = 'drill_' + dt.now().strftime('%Y%m%d%H%M%S') + '.csv'  # 出力ファイル名
 
@@ -591,6 +584,7 @@ def exec_csv_output(drill_type, left_input, right_input, answer_select, drill_li
 
     return response
 
+# pdfを出力
 def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list):
 
     drill_name = get_drill_name(drill_type)
@@ -600,16 +594,17 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
     footer = "keisan-drill.com"
     width, height = A4
 
+    # A4縦書きのpdfを作る
+    page_size = portrait(A4)
+
     # PDF出力
     response = HttpResponse(status=200, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
 
-    # A4縦書きのpdfを作る
-    size = portrait(A4)
 
     # pdfを描く場所を作成：位置を決める原点は左上にする(bottomup)
     # デフォルトの原点は左下
-    p = canvas.Canvas(response, pagesize=size, bottomup=True)
+    p = canvas.Canvas(response, pagesize=page_size, bottomup=True)
     #pdfmetrics.registerFont(UnicodeCIDFont(font_name))
     pdfmetrics.registerFont(TTFont(font_name, os.path.dirname(settings.BASE_DIR) + '/fonts/ipaexg.ttf'))
     font_size = 12
@@ -715,13 +710,10 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
 
     p.save()
 
-    #_draw(p)
-
     return response
 
 # 計算ドリルを作成する
 def create_drill(request):
-    logging.debug("start - create_drill")
     init_context()
     if request.method == 'GET':
         form = forms.DrillTypeForm()
@@ -735,20 +727,18 @@ def create_drill(request):
         form = forms.DrillTypeForm(request.POST)
 
         if form.is_valid():
-            logging.debug("goto - drill.html")
 
             return create_drill_exec(request)
 
         else:
-            logging.debug("goto - index.html")
             c = {'context': context, 'form': form}
             c.update(csrf(request))
             return render(request,
                         'sansudrill/index.html',
                         c)
 
+# 初期ページ
 def index(request):
-    logging.debug("start - index")
     init_context()
     if request.method == 'POST':
         form = forms.DrillTypeForm(request.POST)
