@@ -19,7 +19,7 @@ from pathlib import Path
 SILENCED_SYSTEM_CHECKS = ['mysql.W003']
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'studysite&!p9m18x%^%gk(d6aj_*&t$j6g1r$_#@+-hh$3vkwx%73j7n$g'
 # SECURITY WARNING: don't run with debug turned on in production!
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
