@@ -15,7 +15,7 @@ class NgPattern(models.Model):
     right_minus_flg = models.CharField(max_length=3)
     answer_minus_flg = models.CharField(max_length=3)
     mod_select = models.CharField(max_length=3)
-
+    create_date = models.DateField(auto_now_add=True)
     # SHA256を用いてハッシュ値を生成する
     def get_hash(self):
         val = self.drill_type + self.left_input + self.right_input + self.answer_select \

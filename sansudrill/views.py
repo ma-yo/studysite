@@ -34,9 +34,9 @@ from decimal import Decimal, getcontext, Overflow, DivisionByZero, InvalidOperat
 context = {'title':'計算ドリル', 'message_type':'alert-info', 'message':'', 'timestamp':dt.now().strftime('%Y%m%d%H%M%S')}
 
 # 最大ループ回数
-MAX_LOOP_COUNT = 100000
+MAX_LOOP_COUNT = 10000
 # 問題作成数
-MAKE_COUNT = 50
+MAKE_COUNT = 1
 
 # コンテキストを初期化する
 def init_context():
@@ -233,6 +233,7 @@ def create_drill_list(request, drill_type, left_input, right_input
                 minus_flg = left_value_dec < 0
                 divide_arg = Decimal(str(abs(left_value_dec)))
                 divide_list = get_divide_list(divide_arg)
+
                 # 割り切れない場合は再試行
                 if len(divide_list) == 0:
                     continue
@@ -254,6 +255,7 @@ def create_drill_list(request, drill_type, left_input, right_input
                                     fix_divide_list.append(p)
                     if len(fix_divide_list) == 0:
                         continue
+
                     divide_idx = random.randint(0, len(fix_divide_list) - 1)
                     right_value_dec = Decimal(fix_divide_list[divide_idx])
                 else:
@@ -282,11 +284,11 @@ def create_drill_list(request, drill_type, left_input, right_input
                 continue
 
         elif drill_type == 1: #足し算
-            answer_dec = left_value_dec + right_value_dec
+            answer_dec = int(left_value_dec) + int(right_value_dec)
         elif drill_type == 2: #引き算
-            answer_dec = left_value_dec - right_value_dec
+            answer_dec = int(left_value_dec) - int(right_value_dec)
         elif drill_type == 3: #掛け算
-            answer_dec = left_value_dec * right_value_dec
+            answer_dec = int(left_value_dec) * int(right_value_dec)
 
         # ﾏｲﾅｽ無し 結果がﾏｲﾅｽの場合やり直す
         if answer_minus_flg == 1:
@@ -299,8 +301,12 @@ def create_drill_list(request, drill_type, left_input, right_input
                 continue
 
         drill_data = [0, drill_type, mod_select, int(left_value_dec), int(right_value_dec), answer_dec, int(answer_mod_dec)]
-        if drill_list.__contains__(drill_data) == False:
-            drill_list.append(drill_data)
+        
+        if right_input != 1 and left_input != 1:
+            if drill_list.__contains__(drill_data) == False:
+                drill_list.append(drill_data)
+        else:
+                drill_list.append(drill_data)
 
         # 問題は50問とする
         if len(drill_list) == MAKE_COUNT:
@@ -473,10 +479,6 @@ def create_drill_exec(request):
 
     # 処理が基底ループ回数で終わらなかった場合は終了する
     if len(drill_list) == 0:
-
-        create_ng_pattern(drill_type, left_input, right_input, answer_select
-        , keta_fix_flg, left_minus_flg
-        , right_minus_flg, answer_minus_flg, mod_select)
 
         context['message'] = '問題作成の出来ない組み合わせの可能性があります。設定を見直してください。'
         context['message_type'] = "alert-warning"
