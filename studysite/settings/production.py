@@ -28,6 +28,6 @@ STATIC_ROOT = '/home/redbee/www/html/web_app/studysite/trunc/static'
 logging.basicConfig(
     level = logging.DEBUG,
     format = '%(asctime)s %(levelname)s %(message)s',
-    filename = '/var/log/django/' + datetime.datetime.now().strftime('%Y%m%d') + '-server.log',
+    filename = '/home/redbee/www/html/log/django/' + datetime.datetime.now().strftime('%Y%m%d') + '-server.log',
     filemode = 'a'
 )
