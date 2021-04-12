@@ -34,9 +34,9 @@ from decimal import Decimal, getcontext, Overflow, DivisionByZero, InvalidOperat
 context = {'title':'計算ドリル', 'message_type':'alert-info', 'message':'', 'timestamp':dt.now().strftime('%Y%m%d%H%M%S')}
 
 # 最大ループ回数
-MAX_LOOP_COUNT = 10000
+MAX_LOOP_COUNT = 100000
 # 問題作成数
-MAKE_COUNT = 1
+MAKE_COUNT = 50
 
 # コンテキストを初期化する
 def init_context():
