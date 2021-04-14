@@ -243,9 +243,10 @@ def create_drill_list(request, drill_type, left_input, right_input
                     for d in divide_list_copy:
                         divide_list.append(-d)
                 # 桁数固定の場合右辺が一致する解を取得しその中からランダムで右辺を決定する
-                if keta_fix_flg == 2:
-                    fix_divide_list = []
-                    for p in divide_list:
+
+                fix_divide_list = []
+                for p in divide_list:
+                    if keta_fix_flg == 2:
                         if len(str(abs(p))) == right_input:
                             if right_value_dec < 0:
                                 if  p < 0:
@@ -253,14 +254,21 @@ def create_drill_list(request, drill_type, left_input, right_input
                             else:
                                 if  p >= 0:
                                     fix_divide_list.append(p)
-                    if len(fix_divide_list) == 0:
-                        continue
+                    else:
+                        if len(str(abs(p))) <= right_input:
+                            if right_value_dec < 0:
+                                if  p < 0:
+                                    fix_divide_list.append(p)
+                            else:
+                                if  p >= 0:
+                                    fix_divide_list.append(p)
+                if len(fix_divide_list) == 0:
+                    continue
 
-                    divide_idx = random.randint(0, len(fix_divide_list) - 1)
-                    right_value_dec = Decimal(fix_divide_list[divide_idx])
-                else:
-                    divide_idx = random.randint(0, len(divide_list) - 1)
-                    right_value_dec = Decimal(divide_list[divide_idx])
+                divide_idx = random.randint(0, len(fix_divide_list) - 1)
+                right_value_dec = Decimal(fix_divide_list[divide_idx])
+
+
             elif mod_select == 2:
                 if abs(left_value_dec) < abs(right_value_dec):
                     continue
