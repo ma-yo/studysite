@@ -85,9 +85,9 @@ def create_randint(value, keta_fix):
         return str(result)
 
 # ドリルタイトルを描画する
-def draw_title(p, font_name, width, height, drill_name, write_answer):
+def draw_title(p, font_name, width, height, drill_name, write_answer, mondai_name, mondai_cnt):
 
-    inner_title = '計算ドリル('+drill_name+')'
+    inner_title = '計算ドリル[' + str(mondai_cnt) + '問 ' + drill_name +' ' + mondai_name +']'
     if write_answer:
         inner_title += "(答え)"
     font_size = 18
@@ -113,43 +113,89 @@ def get_slide_range(mondai_cnt):
         range_cnt = 5
     return range_cnt
 # 計算問題をPDFに描画する
-def draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, answer_output, mondai_cnt):
+def draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, answer_output, mondai_cnt, mondai_type):
 
     slide_cnt = get_slide_range(mondai_cnt)
 
-    max_y = 730 / slide_cnt
+    add_x_default = 27
+    max_y = 750 / slide_cnt
     for num in range(slide_cnt):
 
         p.drawString(x, y, str(drill_list[num + start][0]) + ")")
 
         kigo = ""
         if drill_type == 1:
-            kigo = "+"
+            kigo = "＋"
         elif drill_type == 2:
-            kigo = "-"
+            kigo = "－"
         elif drill_type == 3:
             kigo = "×"
         elif drill_type == 4:
             kigo = "÷"
 
-        kigo_width = pdfmetrics.stringWidth(kigo, font_name, font_size)
-        sahen = str(drill_list[num + start][3])
-        sahen_width = pdfmetrics.stringWidth(sahen, font_name, font_size)
-        add_x1 = 27
-        p.drawString(x + add_x1, y, sahen)
-        p.drawString(x + add_x1 + sahen_width + 2, y, kigo)
+        # 通常の計算の場合
+        if answer_output == True or mondai_type == 1:
+            # 左辺
+            sahen = str(drill_list[num + start][3])
+            sahen_width = pdfmetrics.stringWidth(sahen, font_name, font_size)
+            add_x1 = add_x_default
+            p.drawString(x + add_x1, y, sahen)
 
-        uhen = str(drill_list[num + start][4])
-        if drill_list[num + start][4] < 0:
-            uhen = "(" + uhen + ")"
+            #　記号
+            kigo_width = pdfmetrics.stringWidth(kigo, font_name, font_size)
+            p.drawString(x + add_x1 + sahen_width + 2, y, kigo)
 
-        uhen_width = pdfmetrics.stringWidth(uhen, font_name, font_size)
-        p.drawString(x + add_x1 + sahen_width + 2 + kigo_width + 2, y, uhen)
-        p.drawString(x + add_x1 + sahen_width + 2 + kigo_width + 2 + uhen_width + 5, y, "=")
+            # 右辺
+            uhen = str(drill_list[num + start][4])
+            if drill_list[num + start][4] < 0:
+                uhen = "(" + uhen + ")"
+            uhen_width = pdfmetrics.stringWidth(uhen, font_name, font_size)
+            p.drawString(x + add_x1 + sahen_width + 2 + kigo_width + 2, y, uhen)
 
-        equals_width = pdfmetrics.stringWidth("=", font_name, font_size)
+            # イコール記号
+            p.drawString(x + add_x1 + sahen_width + 2 + kigo_width + 2 + uhen_width + 5, y, "=")
 
-        if answer_output:
+            equals_width = pdfmetrics.stringWidth("=", font_name, font_size)
+
+            # 答え
+            if answer_output:
+                if drill_type == 4 and drill_list[num + start][2] == 3 and str(drill_list[num + start][5]).__contains__("."):
+                    ans_num = drill_list[num + start][5].quantize(Decimal("0.00001"))
+                    ans = str(ans_num)
+                else:
+                    ans_num = drill_list[num + start][5]
+                    ans = str(ans_num)
+                p.drawString(x + add_x1 + sahen_width + 2 + kigo_width + 2 + uhen_width + 5 + equals_width + 5, y, ans)
+
+                if drill_list[num + start][2] == 2 and drill_list[num + start][6] != 0:
+                    ans_width = pdfmetrics.stringWidth(ans, font_name, font_size)
+                    p.drawString(x + add_x1 + sahen_width + 2 + kigo_width + 2 + uhen_width + 5 + equals_width + 5 + ans_width, y, "余り" + str(drill_list[num + start][6]))
+            y -= max_y
+
+        elif mondai_type == 2:
+            #逆算計算タイプの場合
+            # 左辺
+            sahen = str(drill_list[num + start][3])
+            sahen_width = pdfmetrics.stringWidth(sahen, font_name, font_size)
+            add_x1 = add_x_default
+            p.drawString(x + add_x1, y, sahen)
+
+            #　記号
+            kigo_width = pdfmetrics.stringWidth(kigo, font_name, font_size)
+            p.drawString(x + add_x1 + sahen_width + 2, y, kigo)
+
+            # 右辺 逆算なので描画しない
+            uhen = str(drill_list[num + start][4])
+            if drill_list[num + start][4] < 0:
+                uhen = "(" + uhen + ")"
+            uhen_width = pdfmetrics.stringWidth(uhen, font_name, font_size)
+
+            # イコール記号
+            p.drawString(x + add_x1 + sahen_width + 2 + kigo_width + 2 + uhen_width + 5, y, "=")
+
+            equals_width = pdfmetrics.stringWidth("=", font_name, font_size)
+
+            # 答え 逆算なので描画する
             if drill_type == 4 and drill_list[num + start][2] == 3 and str(drill_list[num + start][5]).__contains__("."):
                 ans_num = drill_list[num + start][5].quantize(Decimal("0.00001"))
                 ans = str(ans_num)
@@ -161,7 +207,42 @@ def draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, an
             if drill_list[num + start][2] == 2 and drill_list[num + start][6] != 0:
                 ans_width = pdfmetrics.stringWidth(ans, font_name, font_size)
                 p.drawString(x + add_x1 + sahen_width + 2 + kigo_width + 2 + uhen_width + 5 + equals_width + 5 + ans_width, y, "余り" + str(drill_list[num + start][6]))
-        y -= max_y
+            y -= max_y
+        else:
+
+            add_height = 12
+            add_x1 = 0
+            add_x_default = 50
+            add_margin = 3
+            #　記号
+            kigo_width = pdfmetrics.stringWidth(kigo, font_name, font_size)
+
+            # 右辺
+            uhen = str(drill_list[num + start][4])
+            uhen_width = pdfmetrics.stringWidth(uhen, font_name, font_size)
+
+            # 左辺
+            sahen = str(drill_list[num + start][3])
+            sahen_width = pdfmetrics.stringWidth(sahen, font_name, font_size)
+
+            if uhen_width > add_x1:
+                add_x1 = uhen_width
+            if sahen_width > add_x1:
+                add_x1 = sahen_width
+            add_x1 += kigo_width
+            add_x1 += add_x_default
+            # 右辺描画
+            p.drawRightString(x + add_x1, y - add_height, uhen)
+            # 左辺
+            p.drawRightString(x + add_x1, y, sahen)
+
+            # 記号
+            p.drawString(x + add_x_default - add_margin, y - add_height, kigo)
+
+            p.setLineWidth(1)
+            p.line(x + add_x_default, y - add_height - add_margin, x + add_x1, y - add_height - add_margin)
+
+            y -= max_y
 
 #素因数分解し、割れる数を取得する
 def get_divide_list(value):
@@ -344,6 +425,15 @@ def create_drill_list(request, drill_type, left_input, right_input
 
     return drill_list
 
+# 問題タイプを名を取得する
+def get_mondai_name(mondai_type):
+    mondai_name="ひっ算"
+    if mondai_type == 1:
+        mondai_name="通常"
+    elif mondai_type == 2:
+        mondai_name = "逆算"
+    return mondai_name
+
 # ドリル名を取得する
 def get_drill_name(drill_type):
     drill_name=""
@@ -416,6 +506,7 @@ def create_drill_exec(request):
     right_minus_flg = int(request.POST.get("right_minus_select"))
     answer_minus_flg = int(request.POST.get("answer_minus_select"))
     mondai_cnt = int(request.POST.get("mondai_cnt_select")) * 10
+    mondai_type = int(request.POST.get("mondai_type_select"))
 
     mod_select = 0
     if drill_type == 4:
@@ -438,6 +529,7 @@ def create_drill_exec(request):
     getcontext().Emax = 999999999999999
     getcontext().prec = 15
 
+    # 解答可否判定情報を作成するための機能のため、コメントは削除してはいけない！！
     # drill_type_list = [1,2,3,4]
     # left_minus_input_list = [1,2,3]
     # right_minus_input_list = [1,2,3]
@@ -514,7 +606,7 @@ def create_drill_exec(request):
                 c)
 
     if output_type == "pdf":
-        return exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list, mondai_cnt)
+        return exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list, mondai_cnt, mondai_type)
 
     if output_type == "csv":
         return exec_csv_output(drill_type, left_input, right_input, answer_select, drill_list, enc_type)
@@ -611,10 +703,11 @@ def exec_csv_output(drill_type, left_input, right_input, answer_select, drill_li
     return response
 
 # pdfを出力
-def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list, mondai_cnt):
+def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list, mondai_cnt, mondai_type):
 
     slide_cnt = get_slide_range(mondai_cnt)
     drill_name = get_drill_name(drill_type)
+    mondai_name = get_mondai_name(mondai_type)
     filename = 'drill_' + dt.now().strftime('%Y%m%d%H%M%S') + '.pdf'  # 出力ファイル名
     title = '算数ドリル'
     font_name = 'ipa-gothic-fonts'  # フォント
@@ -645,7 +738,7 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
     #12桁以内は1ページに出力
     if input_sum <= 12:
 
-        draw_title(p, font_name, width, height, drill_name, False)
+        draw_title(p, font_name, width, height, drill_name, False, mondai_name, mondai_cnt)
 
         font_size = 12
         p.setFont(font_name, font_size)  # フォントを設定
@@ -659,7 +752,7 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
                 x = width / 2 + 7
                 start = slide_cnt
 
-            draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False, mondai_cnt)
+            draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False, mondai_cnt, mondai_type)
 
         p.drawString((width - footer_width) / 2 , 15, footer)
 
@@ -667,7 +760,7 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
     else:
         for col in range(2):
 
-            draw_title(p, font_name, width, height, drill_name, False)
+            draw_title(p, font_name, width, height, drill_name, False, mondai_name, mondai_cnt)
 
             p.drawString(width - 50, height - 35, str(col + 1) + "/2")
 
@@ -681,7 +774,7 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
             else:
                 start = slide_cnt
 
-            draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False, mondai_cnt)
+            draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False, mondai_cnt, mondai_type)
 
             p.drawString((width - footer_width) / 2 , 15, footer)
 
@@ -692,7 +785,7 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
         #16以内は1ページに出力
         if input_sum <= 12:
 
-            draw_title(p, font_name, width, height, drill_name, True)
+            draw_title(p, font_name, width, height, drill_name, True, mondai_name, mondai_cnt)
 
             font_size = 12
             p.setFont(font_name, font_size)  # フォントを設定
@@ -706,7 +799,7 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
                     x = width / 2 + 7
                     start = slide_cnt
 
-                draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True, mondai_cnt)
+                draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True, mondai_cnt, mondai_type)
 
             p.drawString((width - footer_width) / 2 , 15, footer)
 
@@ -714,7 +807,7 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
         else:
             for col in range(2):
 
-                draw_title(p, font_name, width, height, drill_name, True)
+                draw_title(p, font_name, width, height, drill_name, True, mondai_name, mondai_cnt)
 
                 p.drawString(width - 50, height - 35, str(col + 1) + "/2")
 
@@ -728,7 +821,7 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
                 else:
                     start = slide_cnt
 
-                draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True, mondai_cnt)
+                draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True, mondai_cnt, mondai_type)
 
                 p.drawString((width - footer_width) / 2 , 15, footer)
 
@@ -753,7 +846,7 @@ def create_drill(request):
         form = forms.DrillTypeForm(request.POST)
 
         if form.is_valid():
-
+            print("true!!")
             return create_drill_exec(request)
 
         else:

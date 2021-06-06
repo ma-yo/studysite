@@ -4,7 +4,7 @@ input#id_left_input, input#id_right_input  {
 
 select#id_mod_input, select#id_left_minus_select, select#id_right_minus_select
 ,select#id_keta_fix_select, select#id_answer_select, select#id_mod_select
-,select#id_answer_minus_select, select#id_mondai_cnt_select {
+,select#id_answer_minus_select, select#id_mondai_cnt_select, select#id_mondai_type_select {
     width: 130px;
 }
 .waku-block-center{
@@ -17,4 +17,12 @@ select#id_mod_input, select#id_left_minus_select, select#id_right_minus_select
     border-color: dimgray;
     border-radius: 10px;
     padding: 10px;
+}
+.index-message-block-center{
+    margin: auto;
+    width: 900px;
+    font-size: 16px;
+}
+.index-message{
+    width: 900px;
 }
