@@ -89,3 +89,11 @@ class DrillTypeForm(forms.Form):
         initial='1',
         widget=forms.Select(attrs={'class':'text-left form-control'}),
     )
+
+    # 計算式タイプ
+    mondai_cnt_select  = forms.ChoiceField(
+        choices=(('1','10問'),('2','20問'),('3','30問'),('4','40問'),('5','50問')),
+        required=True,
+        initial='5',
+        widget=forms.Select(attrs={'class':'text-left form-control'}),
+    )

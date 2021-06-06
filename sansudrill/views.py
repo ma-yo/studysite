@@ -35,8 +35,6 @@ context = {'title':'計算ドリル', 'message_type':'alert-info', 'message':'',
 
 # 最大ループ回数
 MAX_LOOP_COUNT = 100000
-# 問題作成数
-MAKE_COUNT = 50
 
 # コンテキストを初期化する
 def init_context():
@@ -77,7 +75,6 @@ def create_randint(value, keta_fix):
     else:
         if value == 0:
             return 0
-        
         result = ""
         for num in range(value):
             if num == 0:
@@ -90,7 +87,7 @@ def create_randint(value, keta_fix):
 # ドリルタイトルを描画する
 def draw_title(p, font_name, width, height, drill_name, write_answer):
 
-    inner_title = '算数ドリル('+drill_name+')'
+    inner_title = '計算ドリル('+drill_name+')'
     if write_answer:
         inner_title += "(答え)"
     font_size = 18
@@ -101,10 +98,28 @@ def draw_title(p, font_name, width, height, drill_name, write_answer):
     p.setFont(font_name, font_size)  # フォントを設定
     p.drawString(x, y, inner_title)
 
+# スライド判定問題数を取得する
+def get_slide_range(mondai_cnt):
+    range_cnt = 0
+    if mondai_cnt == 50:
+        range_cnt = 25
+    elif mondai_cnt == 40:
+        range_cnt = 20
+    elif mondai_cnt == 30:
+        range_cnt = 15
+    elif mondai_cnt == 20:
+        range_cnt = 10
+    else:
+        range_cnt = 5
+    return range_cnt
 # 計算問題をPDFに描画する
-def draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, answer_output):
-    for num in range(25):
-        y -= 30.5
+def draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, answer_output, mondai_cnt):
+
+    slide_cnt = get_slide_range(mondai_cnt)
+
+    max_y = 730 / slide_cnt
+    for num in range(slide_cnt):
+
         p.drawString(x, y, str(drill_list[num + start][0]) + ")")
 
         kigo = ""
@@ -146,6 +161,7 @@ def draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, an
             if drill_list[num + start][2] == 2 and drill_list[num + start][6] != 0:
                 ans_width = pdfmetrics.stringWidth(ans, font_name, font_size)
                 p.drawString(x + add_x1 + sahen_width + 2 + kigo_width + 2 + uhen_width + 5 + equals_width + 5 + ans_width, y, "余り" + str(drill_list[num + start][6]))
+        y -= max_y
 
 #素因数分解し、割れる数を取得する
 def get_divide_list(value):
@@ -174,7 +190,7 @@ def get_divide_list(value):
 
 #計算ドリルリストを作成する
 def create_drill_list(request, drill_type, left_input, right_input
-, answer_select, keta_fix_flg, left_minus_flg, right_minus_flg, answer_minus_flg, mod_select):
+, answer_select, keta_fix_flg, left_minus_flg, right_minus_flg, answer_minus_flg, mod_select, mondai_cnt):
 
     # 作成した計算式を格納
     drill_list = []
@@ -309,15 +325,15 @@ def create_drill_list(request, drill_type, left_input, right_input
                 continue
 
         drill_data = [0, drill_type, mod_select, int(left_value_dec), int(right_value_dec), answer_dec, int(answer_mod_dec)]
-        
+
         if right_input != 1 and left_input != 1:
             if drill_list.__contains__(drill_data) == False:
                 drill_list.append(drill_data)
         else:
                 drill_list.append(drill_data)
 
-        # 問題は50問とする
-        if len(drill_list) == MAKE_COUNT:
+        # 問題数上限となったら終了
+        if len(drill_list) == mondai_cnt:
             break
 
     # 問題番号をつける
@@ -399,11 +415,11 @@ def create_drill_exec(request):
     left_minus_flg = int(request.POST.get("left_minus_select"))
     right_minus_flg = int(request.POST.get("right_minus_select"))
     answer_minus_flg = int(request.POST.get("answer_minus_select"))
+    mondai_cnt = int(request.POST.get("mondai_cnt_select")) * 10
 
     mod_select = 0
     if drill_type == 4:
         mod_select = int(request.POST.get("mod_select"))
-
 
     if exists_ng_pattern(drill_type, left_input, right_input, answer_select
     , keta_fix_flg, left_minus_flg
@@ -483,7 +499,7 @@ def create_drill_exec(request):
 
     # 計算ドリルを作成する
     drill_list = create_drill_list(request, drill_type, left_input
-    , right_input, answer_select, keta_fix_flg, left_minus_flg, right_minus_flg, answer_minus_flg, mod_select)
+    , right_input, answer_select, keta_fix_flg, left_minus_flg, right_minus_flg, answer_minus_flg, mod_select, mondai_cnt)
 
     # 処理が基底ループ回数で終わらなかった場合は終了する
     if len(drill_list) == 0:
@@ -498,7 +514,7 @@ def create_drill_exec(request):
                 c)
 
     if output_type == "pdf":
-        return exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list)
+        return exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list, mondai_cnt)
 
     if output_type == "csv":
         return exec_csv_output(drill_type, left_input, right_input, answer_select, drill_list, enc_type)
@@ -595,8 +611,9 @@ def exec_csv_output(drill_type, left_input, right_input, answer_select, drill_li
     return response
 
 # pdfを出力
-def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list):
+def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list, mondai_cnt):
 
+    slide_cnt = get_slide_range(mondai_cnt)
     drill_name = get_drill_name(drill_type)
     filename = 'drill_' + dt.now().strftime('%Y%m%d%H%M%S') + '.pdf'  # 出力ファイル名
     title = '算数ドリル'
@@ -610,7 +627,6 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
     # PDF出力
     response = HttpResponse(status=200, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
-
 
     # pdfを描く場所を作成：位置を決める原点は左上にする(bottomup)
     # デフォルトの原点は左下
@@ -635,15 +651,15 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
         p.setFont(font_name, font_size)  # フォントを設定
 
         for col in range(2):
-            y = height - 30
+            y = height - 60
             if col == 0:
                 x = 15
                 start = 0
             else:
                 x = width / 2 + 7
-                start = 25
+                start = slide_cnt
 
-            draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False)
+            draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False, mondai_cnt)
 
         p.drawString((width - footer_width) / 2 , 15, footer)
 
@@ -659,13 +675,13 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
             p.setFont(font_name, font_size)  # フォントを設定
 
             x = 25
-            y = height - 30
+            y = height - 60
             if col == 0:
                 start = 0
             else:
-                start = 25
+                start = slide_cnt
 
-            draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False)
+            draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False, mondai_cnt)
 
             p.drawString((width - footer_width) / 2 , 15, footer)
 
@@ -682,15 +698,15 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
             p.setFont(font_name, font_size)  # フォントを設定
 
             for col in range(2):
-                y = height - 30
+                y = height - 60
                 if col == 0:
                     x = 15
                     start = 0
                 else:
                     x = width / 2 + 7
-                    start = 25
+                    start = slide_cnt
 
-                draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True)
+                draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True, mondai_cnt)
 
             p.drawString((width - footer_width) / 2 , 15, footer)
 
@@ -706,13 +722,13 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
                 p.setFont(font_name, font_size)  # フォントを設定
 
                 x = 25
-                y = height - 30
+                y = height - 60
                 if col == 0:
                     start = 0
                 else:
-                    start = 25
+                    start = slide_cnt
 
-                draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True)
+                draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True, mondai_cnt)
 
                 p.drawString((width - footer_width) / 2 , 15, footer)
 

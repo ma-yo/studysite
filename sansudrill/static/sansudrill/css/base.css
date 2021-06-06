@@ -1,6 +1,9 @@
+html{
+    font-size: 12px;
+}
 body {
     font-family: "Meiryo UI", "ヒラギノ角ゴシック", "Arial";
-    background-color:rgb(240,240,240);
+    background-color:rgb(255, 255, 255);
 }
 .w-50px{
     width:50px;
