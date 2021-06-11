@@ -63,15 +63,19 @@ def prime_factorize(n):
 
 # ランダムな整数を取得する
 def create_randint(value, keta_fix):
-    number_max = "0"
     num = 0
 
     if keta_fix == False:
-        while num != value:
-            num+=1
-            number_max += "9"
-
-        return str(random.randint(0, int(number_max)))
+        if value == 0:
+            return 0
+        randValue = random.randint(1, value)
+        result = ""
+        for num in range(randValue):
+            if num == 0:
+                result += str(random.randint(1, 9))
+            else:
+                result += str(random.randint(0, 9))
+        return str(result)
     else:
         if value == 0:
             return 0
@@ -846,7 +850,6 @@ def create_drill(request):
         form = forms.DrillTypeForm(request.POST)
 
         if form.is_valid():
-            print("true!!")
             return create_drill_exec(request)
 
         else:
