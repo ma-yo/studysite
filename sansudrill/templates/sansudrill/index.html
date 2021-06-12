@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{% static 'sansudrill/css/base.css' %}?v={{context.timestamp}}">
 <link rel="stylesheet" href="{% static 'sansudrill/css/index.css' %}?v={{context.timestamp}}">
 {% endblock %}
-{% block page_title %}小学生向け計算問題作成 (50問毎日解こう!){% endblock %}
+{% block page_title %}小学生向け計算ドリル作成サイト (50問毎日解こう!){% endblock %}
 {% block content %}
 
 {% if context.message != '' %}
@@ -26,7 +26,7 @@
 <form id="drill-form" class="mt-4 waku" action="/" method="POST" novalidate>
     <!--csrf対策-->
     {% csrf_token %}
-    <label class="h1 text-dark">小学生向け計算問題作成 (50問毎日解こう!)</label><br>
+    <label class="h1 text-dark">小学生向け計算ドリル作成サイト (50問毎日解こう!)</label><br>
     <h3>毎日解いて、計算に強くなりましょう。</h3>
     <input type="hidden" name="output-type" id="output-type" value="pdf" />
     <input type="hidden" name="enc-type" id="enc-type" value="utf-8" />
@@ -84,7 +84,7 @@
     </div>
 
     <div class="row mt-3">
-        <div class="col-3 h4 my-top mt-1 font-weight-bold text-right">オプション設定:</div>
+        <div class="col-3 h4 my-top mt-1 font-weight-bold text-right">その他設定:</div>
         <div class="col-9 text-left">
             <div class="row form-group m-0 p-0 mb-2">
                 <div class="col-12 m-0 p-0 form-inline">
