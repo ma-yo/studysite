@@ -10,7 +10,8 @@ class NgPattern(models.Model):
     left_input = models.CharField(max_length=3)
     right_input = models.CharField(max_length=3)
     answer_select = models.CharField(max_length=3)
-    keta_fix_flg = models.CharField(max_length=3)
+    keta_fix_left_flg = models.CharField(max_length=3)
+    keta_fix_right_flg = models.CharField(max_length=3)
     left_minus_flg = models.CharField(max_length=3)
     right_minus_flg = models.CharField(max_length=3)
     answer_minus_flg = models.CharField(max_length=3)
@@ -19,7 +20,7 @@ class NgPattern(models.Model):
     # SHA256を用いてハッシュ値を生成する
     def get_hash(self):
         val = self.drill_type + self.left_input + self.right_input + self.answer_select \
-            + self.keta_fix_flg + self.left_minus_flg + self.right_minus_flg \
+            + self.keta_fix_left_flg + self.keta_fix_right_flg + self.left_minus_flg + self.right_minus_flg \
             + self.answer_minus_flg + self.mod_select
 
         return hashlib.sha256(val.encode()).hexdigest()

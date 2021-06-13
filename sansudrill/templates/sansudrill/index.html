@@ -32,8 +32,8 @@
     <input type="hidden" name="enc-type" id="enc-type" value="utf-8" />
     <!--計算式選択-->
     <div class="row mt-3">
-        <div class="col-3 h4 mt-1 font-weight-bold text-right">計算タイプ:</div>
-        <div class="col-9 form-group h4 text-left">
+        <div class="col-2 h4 mt-1 font-weight-bold text-right">計算タイプ:</div>
+        <div class="col-10 form-group h4 text-left">
             {% for radio in form.drill_type %}
             <div class="form-check form-check-inline">
                 {{ radio.tag }}
@@ -50,8 +50,8 @@
 
     <!--計算式-->
     <div class="row mt-3">
-        <div class="col-3 h4 my-top mt-1 font-weight-bold text-right">ケタ数:</div>
-        <div class="col-9 text-left">
+        <div class="col-2 h4 my-top mt-1 font-weight-bold text-right">ケタ数:</div>
+        <div class="col-10 text-left">
             <div class="row form-group m-0 p-0 mb-2">
                 <div class="col-12 m-0 p-0 form-inline">
                     <div class="w-100px text-right">マイナス：</div>
@@ -64,6 +64,8 @@
                         {{ form.errors.left_input }}
                     </div>
                     {% endif %}
+                    <div class="w-100px text-right">桁固定：</div>
+                    {{ form.keta_fix_left_select }}
                 </div>
             </div>
             <div class="row form-group m-0 p-0 mb-2">
@@ -78,24 +80,21 @@
                         {{ form.errors.right_input }}
                     </div>
                     {% endif %}
+                    <div class="w-100px text-right">桁固定：</div>
+                    {{ form.keta_fix_right_select }}
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row mt-3">
-        <div class="col-3 h4 my-top mt-1 font-weight-bold text-right">その他設定:</div>
-        <div class="col-9 text-left">
+        <div class="col-2 h4 my-top mt-1 font-weight-bold text-right">その他設定:</div>
+        <div class="col-10 text-left">
             <div class="row form-group m-0 p-0 mb-2">
                 <div class="col-12 m-0 p-0 form-inline">
                     {% if form.drill_type.value == '4' %}
                     <div class="w-100px text-right">あまり有無：</div>
                     {{ form.mod_select }}
-                    <div class="w-100px text-right ml-4">桁固定：</div>
-                    {{ form.keta_fix_select }}
-                    {% else %}
-                    <div class="w-100px text-right">桁固定：</div>
-                    {{ form.keta_fix_select }}
                     {% endif %}
                 </div>
             </div>
@@ -121,8 +120,8 @@
     </div>
 
     <div class="row mt-3">
-        <div class="col-3 h4 my-top mt-1 font-weight-bold text-right">出力指定:</div>
-        <div class="col-9 text-left">
+        <div class="col-2 h4 my-top mt-1 font-weight-bold text-right">出力指定:</div>
+        <div class="col-10 text-left">
             <button type="button" class="btn btn-danger w-150px small" name="create_drill_pdf" id="id_create_drill_pdf" data-content="pdf" data-action="create_drill">PDF出力</button>
             <button type="button" class="btn btn-primary w-150px" name="create_drill_csv_utf8" id="id_create_drill_csv_utf8" data-content="csv" data-enc="utf-8" data-action="create_drill">CSV出力(UTF-8)</button>
             <button type="button" class="btn btn-primary w-150px" name="create_drill_csv_sjis" id="id_create_drill_csv_sjis" data-content="csv" data-enc="sjis" data-action="create_drill">CSV出力(SJIS)</button>

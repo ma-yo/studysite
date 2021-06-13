@@ -73,7 +73,14 @@ class DrillTypeForm(forms.Form):
         widget=forms.Select(attrs={'class':'text-left form-control'}),
     )
     # 指定桁固定
-    keta_fix_select  = forms.ChoiceField(
+    keta_fix_left_select  = forms.ChoiceField(
+        choices=KETA_FIX_CHOIDE,
+        required=True,
+        initial='2',
+        widget=forms.Select(attrs={'class':'text-left form-control'}),
+    )
+    # 指定桁固定
+    keta_fix_right_select  = forms.ChoiceField(
         choices=KETA_FIX_CHOIDE,
         required=True,
         initial='2',
