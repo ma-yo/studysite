@@ -31,7 +31,7 @@ select#id_mod_input, select#id_left_minus_select, select#id_right_minus_select
     margin: auto;
     width: 900px;
     border-radius: 10px;
-    background-color: rgb(255, 245, 254);
+    background-color: white;
 }
 
 .description-area {
