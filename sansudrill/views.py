@@ -31,7 +31,7 @@ from reportlab.lib import colors
 from decimal import Decimal, getcontext, Overflow, DivisionByZero, InvalidOperation
 
 #コンテキスト
-context = {'title':'計算ドリルの無料作成サイト | 小学生向け', 'message_type':'alert-info', 'message':'', 'timestamp':dt.now().strftime('%Y%m%d%H%M%S')}
+context = {'title':'『無料』計算問題自動作成 | 小学生向け', 'message_type':'alert-info', 'message':'', 'timestamp':dt.now().strftime('%Y%m%d%H%M%S')}
 
 # 最大ループ回数
 MAX_LOOP_COUNT = 10000
