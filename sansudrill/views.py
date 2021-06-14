@@ -91,16 +91,25 @@ def create_randint(value, keta_fix):
 # ドリルタイトルを描画する
 def draw_title(p, font_name, width, height, drill_name, write_answer, mondai_name, mondai_cnt):
 
+    name_title = "なまえ:"
     inner_title = '計算ドリル[' + str(mondai_cnt) + '問 ' + drill_name +' ' + mondai_name +']'
     if write_answer:
         inner_title += "(答え)"
     font_size = 18
     str_width = pdfmetrics.stringWidth(inner_title, font_name, font_size)
     str_height = pdfmetrics.getAscent(font_name, font_size) + pdfmetrics.getDescent(font_name, font_size)
-    x = width / 2 - str_width / 2
+    x = width  - str_width - 15
     y = height - 25 - str_height
     p.setFont(font_name, font_size)  # フォントを設定
     p.drawString(x, y, inner_title)
+
+    if write_answer == False:
+        x = 0
+        p.drawString(x + 15, y, name_title)
+
+        p.setLineWidth(1)
+        p.line(x + 15, y - 3, x + 275, y - 3)
+
 
 # スライド判定問題数を取得する
 def get_slide_range(mondai_cnt):
@@ -772,7 +781,9 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
 
             draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False, mondai_cnt, mondai_type)
 
+        p.setFillColorRGB(0.5,0.5,0.5)
         p.drawString((width - footer_width) / 2 , 15, footer)
+        p.setFillColorRGB(1, 1, 1)
 
         p.showPage()
     else:
@@ -780,7 +791,7 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
 
             draw_title(p, font_name, width, height, drill_name, False, mondai_name, mondai_cnt)
 
-            p.drawString(width - 50, height - 35, str(col + 1) + "/2")
+            # p.drawString(width - 50, height - 35, str(col + 1) + "/2")
 
             font_size = 12
             p.setFont(font_name, font_size)  # フォントを設定
@@ -794,7 +805,9 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
 
             draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, False, mondai_cnt, mondai_type)
 
+            p.setFillColorRGB(0.5,0.5,0.5)
             p.drawString((width - footer_width) / 2 , 15, footer)
+            p.setFillColorRGB(1, 1, 1)
 
             p.showPage()
 
@@ -819,15 +832,16 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
 
                 draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True, mondai_cnt, mondai_type)
 
+            p.setFillColorRGB(0.5,0.5,0.5)
             p.drawString((width - footer_width) / 2 , 15, footer)
-
+            p.setFillColorRGB(1, 1, 1)
             p.showPage()
         else:
             for col in range(2):
 
                 draw_title(p, font_name, width, height, drill_name, True, mondai_name, mondai_cnt)
 
-                p.drawString(width - 50, height - 35, str(col + 1) + "/2")
+                # p.drawString(width - 50, height - 35, str(col + 1) + "/2")
 
                 font_size = 12
                 p.setFont(font_name, font_size)  # フォントを設定
@@ -841,8 +855,9 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
 
                 draw_keisan(p, font_name, font_size, x, y, start, drill_type, drill_list, True, mondai_cnt, mondai_type)
 
+                p.setFillColorRGB(0.5,0.5,0.5)
                 p.drawString((width - footer_width) / 2 , 15, footer)
-
+                p.setFillColorRGB(1, 1, 1)
                 p.showPage()
 
     p.save()
