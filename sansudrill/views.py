@@ -525,17 +525,17 @@ def create_drill_exec(request):
     if drill_type == 4:
         mod_select = int(request.POST.get("mod_select"))
 
-    # if exists_ng_pattern(drill_type, left_input, right_input, answer_select
-    # , keta_fix_left_flg, keta_fix_right_flg, left_minus_flg
-    # , right_minus_flg, answer_minus_flg, mod_select) == True:
-    #     context['message'] = '問題作成の出来ない組み合わせの可能性があります。設定を見直してください。'
-    #     context['message_type'] = "alert-warning"
-    #     form = forms.DrillTypeForm(request.POST)
-    #     c = {'context': context, 'form': form}
-    #     c.update(csrf(request))
-    #     return render(request,
-    #             'sansudrill/index.html',
-    #             c)
+    if exists_ng_pattern(drill_type, left_input, right_input, answer_select
+    , keta_fix_left_flg, keta_fix_right_flg, left_minus_flg
+    , right_minus_flg, answer_minus_flg, mod_select) == True:
+        context['message'] = '問題作成の出来ない組み合わせの可能性があります。設定を見直してください。'
+        context['message_type'] = "alert-warning"
+        form = forms.DrillTypeForm(request.POST)
+        c = {'context': context, 'form': form}
+        c.update(csrf(request))
+        return render(request,
+                'sansudrill/index.html',
+                c)
 
     # Decimalを初期化する
     getcontext().Emin = -999999999999999
@@ -543,69 +543,69 @@ def create_drill_exec(request):
     getcontext().prec = 15
 
     # 解答可否判定情報を作成するための機能のため、コメントは削除してはいけない！！
-    drill_type_list = [1,2,3,4]
-    left_minus_input_list = [1,2,3]
-    right_minus_input_list = [1,2,3]
-    left_keta_input_list = [0,1,2,3,4,5,6,7,8,9,10]
-    right_keta_input_list = [0,1,2,3,4,5,6,7,8,9,10]
-    keta_fix_left_list = [1,2]
-    keta_fix_right_list = [1,2]
-    answer_minus_list = [1,2,3]
-    mod_list = [1,2,3]
+    # drill_type_list = [1,2,3,4]
+    # left_minus_input_list = [1,2,3]
+    # right_minus_input_list = [1,2,3]
+    # left_keta_input_list = [0,1,2,3,4,5,6,7,8,9,10]
+    # right_keta_input_list = [0,1,2,3,4,5,6,7,8,9,10]
+    # keta_fix_left_list = [1,2]
+    # keta_fix_right_list = [1,2]
+    # answer_minus_list = [1,2,3]
+    # mod_list = [1,2,3]
 
-    max = len(drill_type_list) * len(left_minus_input_list) * len(right_minus_input_list) \
-    * len(left_keta_input_list) * len(right_keta_input_list) * len(keta_fix_left_list)  * len(keta_fix_right_list) \
-    * len(answer_minus_list) * len(mod_list)
-    logging.debug("max : " + str(max))
-    cnt = 0
-    for v0 in drill_type_list:
-        drill_type = v0
-        for v1 in left_keta_input_list:
-            left_input = v1
-            for v2 in right_keta_input_list:
-                right_input = v2
-                for v3 in left_minus_input_list:
-                    left_minus_flg = v3
-                    for v4 in right_minus_input_list:
-                        right_minus_flg = v4
-                        for v5 in keta_fix_left_list:
-                            keta_fix_left_flg = v5
-                            for v6 in keta_fix_right_list:
-                                keta_fix_right_flg = v6
-                                for v7 in answer_minus_list:
-                                    answer_minus_flg = v7
-                                    for v8 in mod_list:
-                                        mod_select = v8
+    # max = len(drill_type_list) * len(left_minus_input_list) * len(right_minus_input_list) \
+    # * len(left_keta_input_list) * len(right_keta_input_list) * len(keta_fix_left_list)  * len(keta_fix_right_list) \
+    # * len(answer_minus_list) * len(mod_list)
+    # logging.debug("max : " + str(max))
+    # cnt = 0
+    # for v0 in drill_type_list:
+    #     drill_type = v0
+    #     for v1 in left_keta_input_list:
+    #         left_input = v1
+    #         for v2 in right_keta_input_list:
+    #             right_input = v2
+    #             for v3 in left_minus_input_list:
+    #                 left_minus_flg = v3
+    #                 for v4 in right_minus_input_list:
+    #                     right_minus_flg = v4
+    #                     for v5 in keta_fix_left_list:
+    #                         keta_fix_left_flg = v5
+    #                         for v6 in keta_fix_right_list:
+    #                             keta_fix_right_flg = v6
+    #                             for v7 in answer_minus_list:
+    #                                 answer_minus_flg = v7
+    #                                 for v8 in mod_list:
+    #                                     mod_select = v8
 
-                                        cnt += 1
-                                        if cnt % 100 == 0:
-                                            logging.debug(str(cnt) + "/" + str(max))
-                                        # 計算ドリルを作成する
-                                        drill_list = create_drill_list(request, drill_type, left_input
-                                        , right_input, answer_select, keta_fix_left_flg, keta_fix_right_flg, left_minus_flg, right_minus_flg, answer_minus_flg, mod_select, mondai_cnt)
-                                        if len(drill_list) == 0:
-                                            log = "計算ﾀｲﾌﾟ:" + str(drill_type)
-                                            log += " 左辺:" + str(left_input)
-                                            log += " 右辺:" + str(right_input)
-                                            log += " 左辺ﾏｲﾅｽ:" + str(left_minus_flg)
-                                            log += " 右辺ﾏｲﾅｽ:" + str(right_minus_flg)
-                                            log += " 余り有無:" + str(mod_select)
-                                            log += " 左辺指定桁固定:" + str(keta_fix_left_flg)
-                                            log += " 右辺指定桁固定:" + str(keta_fix_right_flg)
-                                            log += " 答えﾏｲﾅｽ:" + str(answer_minus_flg)
-                                            create_ng_pattern(drill_type = drill_type
-                                            , left_input = left_input
-                                            , right_input = right_input
-                                            , answer_select = answer_select
-                                            , keta_fix_left_flg = keta_fix_left_flg
-                                            , keta_fix_right_flg = keta_fix_right_flg
-                                            , left_minus_flg = left_minus_flg
-                                            , right_minus_flg = right_minus_flg
-                                            , answer_minus_flg = answer_minus_flg
-                                            , mod_select = mod_select)
-                                            logging.debug(log)
+    #                                     cnt += 1
+    #                                     if cnt % 100 == 0:
+    #                                         logging.debug(str(cnt) + "/" + str(max))
+    #                                     # 計算ドリルを作成する
+    #                                     drill_list = create_drill_list(request, drill_type, left_input
+    #                                     , right_input, answer_select, keta_fix_left_flg, keta_fix_right_flg, left_minus_flg, right_minus_flg, answer_minus_flg, mod_select, mondai_cnt)
+    #                                     if len(drill_list) == 0:
+    #                                         log = "計算ﾀｲﾌﾟ:" + str(drill_type)
+    #                                         log += " 左辺:" + str(left_input)
+    #                                         log += " 右辺:" + str(right_input)
+    #                                         log += " 左辺ﾏｲﾅｽ:" + str(left_minus_flg)
+    #                                         log += " 右辺ﾏｲﾅｽ:" + str(right_minus_flg)
+    #                                         log += " 余り有無:" + str(mod_select)
+    #                                         log += " 左辺指定桁固定:" + str(keta_fix_left_flg)
+    #                                         log += " 右辺指定桁固定:" + str(keta_fix_right_flg)
+    #                                         log += " 答えﾏｲﾅｽ:" + str(answer_minus_flg)
+    #                                         create_ng_pattern(drill_type = drill_type
+    #                                         , left_input = left_input
+    #                                         , right_input = right_input
+    #                                         , answer_select = answer_select
+    #                                         , keta_fix_left_flg = keta_fix_left_flg
+    #                                         , keta_fix_right_flg = keta_fix_right_flg
+    #                                         , left_minus_flg = left_minus_flg
+    #                                         , right_minus_flg = right_minus_flg
+    #                                         , answer_minus_flg = answer_minus_flg
+    #                                         , mod_select = mod_select)
+    #                                         logging.debug(log)
 
-    drill_list = []
+    # drill_list = []
 
     # 計算ドリルを作成する
     drill_list = create_drill_list(request, drill_type, left_input
