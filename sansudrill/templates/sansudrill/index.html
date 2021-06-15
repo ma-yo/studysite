@@ -28,7 +28,7 @@
     {% csrf_token %}
     <label class="h1 text-dark">『無料』計算問題自動作成 | 小学生向け</label><br>
     <h3>毎日解くことで計算能力がぐんぐん向上します。</h3>
-    <input type="hidden" name="output-type" id="output-type" value="pdf" />
+    <input type="hidden" name="content-type" id="content-type" value="pdf" />
     <input type="hidden" name="enc-type" id="enc-type" value="utf-8" />
     <!--計算式選択-->
     <div class="row mt-3">
@@ -114,6 +114,21 @@
                     {{ form.mondai_cnt_select }}
                     <div class="w-100px text-right ml-4">問題タイプ：</div>
                     {{ form.mondai_type_select }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-2 h4 my-top mt-1 font-weight-bold text-right">過去設定読込:</div>
+        <div class="col-10 text-left">
+            <div class="row form-group m-0 p-0 mb-2">
+                <div class="col-12 m-0 p-0 form-inline">
+                    <div class="w-100px text-right">コード：</div>
+                    {{ form.load_drill_type_input }}
+                    <button type="button" class="ml-2 btn btn-secondary w-75px small" name="load_drill_type" id="id_load_drill_type" data-content="load-drill-type" data-action="load_drill_type">読込む</button>
+                    <button type="button" class="ml-2 btn btn-secondary w-75px small" name="copy_drill_type" id="id_copy_drill_type" data-content="copy-drill-type" data-action="copy_drill_type">コピー</button>
+                    <div id="id_copy_drill_alert" class="copy_drill_alert ml-2 font-weight-bold text-lg-left">クリップボードにコピーしました。</div>
                 </div>
             </div>
         </div>
@@ -210,6 +225,14 @@
             </h5>
         </div>
         <div class="row bg-even ml-1 mr-1 pt-2 pb-2">
+            <h5 class="col-3 text-right font-weight-bold">
+                問題コード:
+            </h5>
+            <h5 class="col-9 text-left">
+                コードを控えておくことで次回も同じタイプの問題を出すことができます。
+            </h5>
+        </div>
+        <div class="row bg-odd ml-1 mr-1 pt-2 pb-2">
             <h5 class="col-3 text-right font-weight-bold">
                 出力指定:
             </h5>

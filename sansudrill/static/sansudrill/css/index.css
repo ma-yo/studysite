@@ -1,7 +1,9 @@
 input#id_left_input, input#id_right_input  {
     width: 100px;
 }
-
+input#id_load_drill_type_input {
+    width: 150px;
+}
 select#id_mod_input, select#id_left_minus_select, select#id_right_minus_select
 ,select#id_keta_fix_left_select,select#id_keta_fix_right_select, select#id_answer_select, select#id_mod_select
 ,select#id_answer_minus_select, select#id_mondai_cnt_select, select#id_mondai_type_select {
@@ -46,4 +48,8 @@ select#id_mod_input, select#id_left_minus_select, select#id_right_minus_select
 }
 .bg-odd{
     background-color: #eeeeee;
+}
+
+.copy_drill_alert {
+    display: none;
 }

@@ -516,7 +516,7 @@ def exists_ng_pattern(drill_type, left_input, right_input, answer_select
 def create_drill_exec(request):
 
     #POSTパラメーターを取得する
-    output_type = request.POST.get("output-type")
+    content_type = request.POST.get("content-type")
     enc_type = request.POST.get("enc-type")
     drill_type = int(request.POST.get("drill_type"))
     left_input = int(request.POST.get("left_input"))
@@ -632,13 +632,13 @@ def create_drill_exec(request):
                 'sansudrill/index.html',
                 c)
 
-    if output_type == "pdf":
+    if content_type == "pdf":
         return exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_list, mondai_cnt, mondai_type)
 
-    if output_type == "csv":
+    if content_type == "csv":
         return exec_csv_output(drill_type, answer_select, drill_list, enc_type)
 
-    if output_type == "xls":
+    if content_type == "xls":
         return exec_xls_output(drill_type, answer_select, drill_list)
 
 # excelを出力
@@ -868,6 +868,7 @@ def exec_pdf_output(drill_type, left_input, right_input, answer_select, drill_li
 def create_drill(request):
     init_context()
     if request.method == 'GET':
+
         form = forms.DrillTypeForm()
         c = {'context': context, 'form': form}
         c.update(csrf(request))
@@ -893,9 +894,10 @@ def index(request):
     init_context()
     if request.method == 'POST':
         form = forms.DrillTypeForm(request.POST)
-        c = {'context': context, 'form': form}
         form.is_valid()
+        c = {'context': context, 'form': form}
     else:
+
         form = forms.DrillTypeForm()
         c = {'context': context, 'form': form}
 

@@ -122,3 +122,11 @@ class DrillTypeForm(forms.Form):
         initial='1',
         widget=forms.Select(attrs={'class':'text-left form-control'}),
     )
+
+    # 問題コード
+    load_drill_type_input = forms.CharField(
+        label='問題コード',
+        required=False,
+        initial='',
+        widget=forms.TextInput(attrs={'class':'text-left form-control'}),
+    )
