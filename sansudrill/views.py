@@ -364,7 +364,7 @@ def create_drill_list(request, drill_type, left_input, right_input
         if loop_cnt > MAX_LOOP_COUNT:
             return []
 
-        if RANDOM_CODE == 5:
+        if drill_type == RANDOM_CODE:
             #計算式をランダムで選択する
             tmp_drill_type = random.randint(1, 4)
 
@@ -607,7 +607,7 @@ def create_drill_exec(request):
     if drill_type == DIVIDE_CODE or drill_type == RANDOM_CODE:
         mod_select = int(request.POST.get("mod_select"))
 
-    simulation = False
+    simulation = True
 
     if simulation == True:
 
