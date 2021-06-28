@@ -128,7 +128,7 @@ $(function(){
         let mondai_cnt_select = input_code.slice(10,11);
         let mondai_type_select = input_code.slice(11,12);
 
-        var exists = isCodeExists(code[drill_type], 1, 4)
+        var exists = isCodeExists(code[drill_type], 1, 5)
         && isCodeExists(code[left_minus_select], 1, 3)
         && isCodeExists(code[right_minus_select], 1, 3)
         && isCodeExists(code[left_input], 0, 10)
