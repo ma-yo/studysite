@@ -607,7 +607,7 @@ def create_drill_exec(request):
     if drill_type == DIVIDE_CODE or drill_type == RANDOM_CODE:
         mod_select = int(request.POST.get("mod_select"))
 
-    simulation = True
+    simulation = False
 
     if simulation == True:
 
