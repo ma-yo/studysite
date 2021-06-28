@@ -5,7 +5,7 @@ import logging
 class DrillTypeForm(forms.Form):
 
     # 計算式タイプ
-    KEISAN_CHOICE = [('1','足し算'),('2','引き算'),('3','掛け算'),('4','割り算')]
+    KEISAN_CHOICE = [('1','足し算'),('2','引き算'),('3','掛け算'),('4','割り算'),('5','ランダム')]
     AMARI_CHOICE = [('1','余り無し'),('2','有り'),('3','小数点')]
     ANSWER_CHOIDE = [('1','しない'),('2','する')]
     KETA_FIX_CHOIDE = [('1','しない'),('2','する')]

@@ -92,7 +92,7 @@
         <div class="col-10 text-left">
             <div class="row form-group m-0 p-0 mb-2">
                 <div class="col-12 m-0 p-0 form-inline">
-                    {% if form.drill_type.value == '4' %}
+                    {% if form.drill_type.value == '4' or form.drill_type.value == '5' %}
                     <div class="w-100px text-right">あまり有無：</div>
                     {{ form.mod_select }}
                     {% endif %}
@@ -157,7 +157,7 @@
                 計算タイプ:
             </h5>
             <h5 class="col-9 text-left">
-                足し算、引き算、掛け算、割り算の中から選びます。
+                足し算、引き算、掛け算、割り算、ランダムの中から選びます。
             </h5>
         </div>
         <div class="row bg-even ml-1 mr-1 pt-2 pb-2">
