@@ -56,12 +56,18 @@
                 <div class="col-12 m-0 p-0 form-inline">
                     <div class="w-100px text-right">マイナス：</div>
                     {{ form.left_minus_select }}
-                    <div class="w-100px text-right ml-4">左辺(0-10)：</div>
+                    <div class="w-100px text-right ml-4">左辺(0-8)：</div>
                     {{ form.left_input }}
+                    .{{ form.left_small_input }}
                     <label>ケタ</label>
                     {% if form.errors.left_input %}
                     <div class="text-danger small">
                         {{ form.errors.left_input }}
+                    </div>
+                    {% endif %}
+                    {% if form.errors.left_small_input %}
+                    <div class="text-danger small">
+                        {{ form.errors.left_small_input }}
                     </div>
                     {% endif %}
                     <div class="w-100px text-right">桁固定：</div>
@@ -72,12 +78,18 @@
                 <div class="col-12 m-0 p-0 form-inline">
                     <div class="w-100px text-right">マイナス：</div>
                     {{ form.right_minus_select }}
-                    <div class="w-100px text-right ml-4">右辺(0-10)：</div>
+                    <div class="w-100px text-right ml-4">右辺(0-8)：</div>
                     {{ form.right_input }}
+                    .{{ form.right_small_input }}
                     <label>ケタ</label>
                     {% if form.errors.right_input %}
                     <div class="text-danger small">
                         {{ form.errors.right_input }}
+                    </div>
+                    {% endif %}
+                    {% if form.errors.right_small_input %}
+                    <div class="text-danger small">
+                        {{ form.errors.right_small_input }}
                     </div>
                     {% endif %}
                     <div class="w-100px text-right">桁固定：</div>

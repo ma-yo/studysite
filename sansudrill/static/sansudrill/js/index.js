@@ -17,6 +17,8 @@ $(function(){
         let right_minus_select = code[$('#id_right_minus_select').val()];
         let left_input = code[$('#id_left_input').val()];
         let right_input = code[$('#id_right_input').val()];
+        let left_small_input = code[$('#id_left_small_input').val()];
+        let right_small_input = code[$('#id_right_small_input').val()];
         let keta_fix_left_select = code[$('#id_keta_fix_left_select').val()];
         let keta_fix_right_select = code[$('#id_keta_fix_right_select').val()];
         let mod_select = 'A';
@@ -33,7 +35,9 @@ $(function(){
          + left_minus_select
          + right_minus_select
          + left_input
+         + left_small_input
          + right_input
+         + right_small_input
          + keta_fix_left_select
          + keta_fix_right_select
          + mod_select
@@ -49,14 +53,26 @@ $(function(){
         setCode();
     });
     $('#id_left_input').change(function() {
-        if($(this).val()>10){
-            $(this).val(10);
+        if($(this).val()>8){
+            $(this).val(8);
         }
         setCode();
     });
     $('#id_right_input').change(function() {
-        if($(this).val()>10){
-            $(this).val(10);
+        if($(this).val()>8){
+            $(this).val(8);
+        }
+        setCode();
+    });
+    $('#id_left_small_input').change(function() {
+        if($(this).val()>2){
+            $(this).val(2);
+        }
+        setCode();
+    });
+    $('#id_right_small_input').change(function() {
+        if($(this).val()>2){
+            $(this).val(2);
         }
         setCode();
     });
@@ -109,7 +125,7 @@ $(function(){
         ,'I':'9'
         ,'J':'10'}
         let input_code = $('#id_load_drill_type_input').val();
-        if(input_code.length != 12){
+        if(input_code.length != 14){
             $('#id_copy_drill_alert').html('コードが不正です。');
             $('#id_copy_drill_alert').css({color:'red'});
             $('#id_copy_drill_alert').show().delay(300).fadeOut(600);
@@ -119,20 +135,24 @@ $(function(){
         let left_minus_select = input_code.slice(1,2);
         let right_minus_select = input_code.slice(2,3);
         let left_input = input_code.slice(3,4);
-        let right_input = input_code.slice(4,5);
-        let keta_fix_left_select = input_code.slice(5,6);
-        let keta_fix_right_select = input_code.slice(6,7);
-        let mod_select = input_code.slice(7,8);
-        let answer_minus_select = input_code.slice(8,9);
-        let answer_select = input_code.slice(9,10);
-        let mondai_cnt_select = input_code.slice(10,11);
-        let mondai_type_select = input_code.slice(11,12);
+        let left_small_input = input_code.slice(4,5);
+        let right_input = input_code.slice(5,6);
+        let right_small_input = input_code.slice(6,7);
+        let keta_fix_left_select = input_code.slice(7,8);
+        let keta_fix_right_select = input_code.slice(8,9);
+        let mod_select = input_code.slice(9,10);
+        let answer_minus_select = input_code.slice(10,11);
+        let answer_select = input_code.slice(11,12);
+        let mondai_cnt_select = input_code.slice(12,13);
+        let mondai_type_select = input_code.slice(13,14);
 
         var exists = isCodeExists(code[drill_type], 1, 5)
         && isCodeExists(code[left_minus_select], 1, 3)
         && isCodeExists(code[right_minus_select], 1, 3)
-        && isCodeExists(code[left_input], 0, 10)
-        && isCodeExists(code[right_input], 0, 10)
+        && isCodeExists(code[left_input], 0, 8)
+        && isCodeExists(code[left_small_input], 0, 2)
+        && isCodeExists(code[right_input], 0, 8)
+        && isCodeExists(code[right_small_input], 0, 2)
         && isCodeExists(code[keta_fix_left_select], 1, 2)
         && isCodeExists(code[keta_fix_right_select], 1, 2)
         && isCodeExists(code[mod_select], 1, 3)
@@ -150,7 +170,9 @@ $(function(){
         $('#id_left_minus_select').val(code[left_minus_select]);
         $('#id_right_minus_select').val(code[right_minus_select]);
         $('#id_left_input').val(code[left_input]);
+        $('#id_left_small_input').val(code[left_small_input]);
         $('#id_right_input').val(code[right_input]);
+        $('#id_right_small_input').val(code[right_small_input]);
         $('#id_keta_fix_left_select').val(code[keta_fix_left_select]);
         $('#id_keta_fix_right_select').val(code[keta_fix_right_select]);
         $('#id_mod_select').val(code[mod_select]);
@@ -187,7 +209,7 @@ $(function(){
         $('#drill-form').attr("action", data_action);
         $('#drill-form').submit();
     }
-    
+
     function isCodeExists(code, from, to){
         if(code >= from && code <= to){
             return true;

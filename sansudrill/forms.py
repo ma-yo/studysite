@@ -37,7 +37,7 @@ class DrillTypeForm(forms.Form):
         label='左辺整数部',
         widget=forms.NumberInput(attrs={'class':'text-right form-control'}),
         min_value=0,
-        max_value=10,
+        max_value=8,
         initial=3,
         required=True,
         error_messages={
@@ -50,13 +50,40 @@ class DrillTypeForm(forms.Form):
         label='右辺整数部',
         widget=forms.NumberInput(attrs={'class':'text-right form-control'}),
         min_value=0,
-        max_value=10,
+        max_value=8,
         initial=3,
+        required=True,
         error_messages={
         'min_value':'右辺整数部は1以上です。'
         ,'max_value':'右辺整数部は10以下です。'
-        ,'required':'右辺整数部は入力必須です。'},
-        required=True,)
+        ,'required':'右辺整数部は入力必須です。'},)
+
+
+    # 左辺小数部分
+    left_small_input = forms.IntegerField(
+        label='左辺小数部',
+        widget=forms.NumberInput(attrs={'class':'text-right form-control'}),
+        min_value=0,
+        max_value=2,
+        initial=0,
+        required=True,
+        error_messages={
+        'min_value':'左辺小数部は0以上です。'
+        ,'max_value':'左辺小数部は2以下です。'
+        ,'required':'左辺小数部は入力必須です。'},)
+
+    # 右辺小数部分
+    right_small_input = forms.IntegerField(
+        label='右辺小数部',
+        widget=forms.NumberInput(attrs={'class':'text-right form-control'}),
+        min_value=0,
+        max_value=2,
+        initial=0,
+        required=True,
+        error_messages={
+        'min_value':'右辺小数部は0以上です。'
+        ,'max_value':'右辺小数部は2以下です。'
+        ,'required':'右辺小数部は入力必須です。'},)
 
     # 余り有無
     mod_select = forms.ChoiceField(
