@@ -423,9 +423,15 @@ def create_drill_list(request, drill_type, left_input, left_small_input, right_i
                 divide_arg = Decimal(0)
                 minus_flg = left_value_dec < 0 or right_value_dec < 0
                 left_value_tmp = abs(left_value_dec)
+                right_value_tmp = abs(right_value_dec)
                 multipleCnt = 0
                 while int(left_value_tmp) - left_value_tmp != 0:
                     left_value_tmp *= 10
+                    right_value_tmp *= 10
+                    multipleCnt += 1
+                while  int(right_value_tmp) - right_value_tmp != 0:
+                    left_value_tmp *= 10
+                    right_value_tmp *= 10
                     multipleCnt += 1
                 left_value_tmp = int(left_value_tmp)
                 divide_arg = Decimal(str(abs(left_value_tmp)))
