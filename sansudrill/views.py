@@ -458,21 +458,25 @@ def create_drill_list(request, drill_type, left_input, left_small_input, right_i
                 for p in divide_list:
                     if keta_fix_right_flg == KETA_FIX_ON:
                         if right_small_input > 0:
-                            if len(str(abs(p))) == right_input + right_small_input + 1:
-                                if right_value_dec < 0:
-                                    if  p < 0:
-                                        fix_divide_list.append(p)
-                                else:
-                                    if  p >= 0:
-                                        fix_divide_list.append(p)
+                            right_split = str(abs(p)).split('.')
+                            if len(right_split) == 2:
+                                if len(right_split[0]) == right_input and len(right_split[1]) == right_small_input:
+                                    if right_value_dec < 0:
+                                        if  p < 0:
+                                            fix_divide_list.append(p)
+                                    else:
+                                        if  p >= 0:
+                                            fix_divide_list.append(p)
                         else:
-                            if len(str(abs(int(p)))) == right_input:
-                                if right_value_dec < 0:
-                                    if  p < 0:
-                                        fix_divide_list.append(p)
-                                else:
-                                    if  p >= 0:
-                                        fix_divide_list.append(p)
+                            right_split = str(abs(p)).split('.')
+                            if len(right_split) == 1:
+                                if len(str(abs(int(p)))) == right_input:
+                                    if right_value_dec < 0:
+                                        if  p < 0:
+                                            fix_divide_list.append(p)
+                                    else:
+                                        if  p >= 0:
+                                            fix_divide_list.append(p)
                     else:
                         if right_small_input > 0:
                             if len(str(abs(p))) <= right_input + right_small_input + 1:
@@ -484,6 +488,7 @@ def create_drill_list(request, drill_type, left_input, left_small_input, right_i
                                         fix_divide_list.append(p)
                         else:
                             if len(str(abs(p))) < 10 ** right_input:
+                                print(p)
                                 if right_value_dec < 0:
                                     if  p < 0:
                                         fix_divide_list.append(p)
