@@ -31,7 +31,7 @@ from fractions import Fraction
 from decimal import Decimal, getcontext, Overflow, DivisionByZero, InvalidOperation
 
 #コンテキスト
-context = {'title':'『無料』計算問題自動作成 | 小学生向け', 'message_type':'alert-info', 'message':'', 'timestamp':dt.now().strftime('%Y%m%d%H%M%S')}
+context = {'title':'計算ドリルの問題作成 | 小学生の算数', 'message_type':'alert-info', 'message':'', 'timestamp':dt.now().strftime('%Y%m%d%H%M%S')}
 
 # PDFフォント
 FONT_NAMEPDF = 'ipa-gothic-fonts'

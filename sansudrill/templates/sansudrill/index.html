@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{% static 'sansudrill/css/base.css' %}?v={{context.timestamp}}">
 <link rel="stylesheet" href="{% static 'sansudrill/css/index.css' %}?v={{context.timestamp}}">
 {% endblock %}
-{% block page_title %}『無料』計算問題自動作成 | 小学生向け{% endblock %}
+{% block page_title %}計算ドリルの問題作成 | 小学生の算数{% endblock %}
 {% block content %}
 
 {% if context.message != '' %}
@@ -26,8 +26,8 @@
 <form id="drill-form" class="mt-4 select-area" action="/" method="POST" novalidate>
     <!--csrf対策-->
     {% csrf_token %}
-    <label class="h1 text-dark">『無料』計算問題自動作成 | 小学生向け</label><br>
-    <h3>毎日解くことで計算能力がぐんぐん向上します。</h3>
+    <label class="h1 text-dark">計算ドリルの問題作成 | 小学生の算数</label><br>
+    <h3>毎日解いて集中力と計算能力を向上させましょう。</h3>
     <input type="hidden" name="content-type" id="content-type" value="pdf" />
     <input type="hidden" name="enc-type" id="enc-type" value="utf-8" />
     <!--計算式選択-->
